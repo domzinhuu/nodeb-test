@@ -1,5 +1,4 @@
 import { sumBy } from "lodash";
-import mockData from "../data/mock.json";
 
 const formatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -20,13 +19,12 @@ export function convertAcquirersToAlist(acquirers: any) {
   });
 }
 
-export function buildResponseData() {
-  const data: any = mockData;
+export function buildResponseData(mockData: any) {
   return Object.keys(mockData).map((key) => {
     if (key.replace(/\D/g, "") === "") {
       return null;
     }
-    const acquirers = data[key].acquirers;
+    const acquirers = mockData[key].acquirers;
     const acquirerToList = convertAcquirersToAlist(acquirers);
 
     const totalPayValue = sumBy(acquirerToList, "valorPagar");

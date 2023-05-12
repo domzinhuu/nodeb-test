@@ -22,7 +22,7 @@ function SideBar({ children }: any) {
         </div>
         <div className="flex flex-col items-center justify-between">
           <span className="my-4 border-b-[1px] border-gray-200 w-full p-2"></span>
-          <Link href="/">
+          <Link href="/settings">
             <div className="bg-gray-800 text-white p-3 rounded-lg inline-block">
               <FiSettings size={20} />
             </div>
