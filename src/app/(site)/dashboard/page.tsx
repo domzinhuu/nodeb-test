@@ -2,14 +2,13 @@ import BarChart from "@/components/BarChart";
 import DataTable from "@/components/DataTable";
 import Header from "@/components/Header";
 import TopCard from "@/components/TopCard";
+import { API_URL } from "@/constants/variables";
 import { buildResponseData } from "@/utils/helper.functions";
 import { filter } from "lodash";
 import { use } from "react";
 
 async function getDashboardDataReq() {
-  const response = await fetch("http://localhost:3000/api/settings", {
-    cache:"no-cache",
-  });
+  const response = await fetch(`http://localhost:3000/api/settings`);
   const json = await response.json();
   const mockData  = JSON.parse(json)
   const data = buildResponseData(mockData);

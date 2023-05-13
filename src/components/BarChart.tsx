@@ -34,8 +34,8 @@ function BarChart() {
         {
           label: "Talvez por adquirente?",
           data: [1283, 4890, 1820, 5849, 6970, 6890, 7958],
-          borderColor: "rgb(53,162,235)",
-          backgroundColor: "rgb(53,162,235,0.4)",
+          borderColor: "rgb(107, 33, 168)",
+          backgroundColor: "rgb(107, 33, 168, 0.8)",
         },
       ],
     });
