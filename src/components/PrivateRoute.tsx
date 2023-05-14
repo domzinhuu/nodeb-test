@@ -15,6 +15,7 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
 
   useEffect(() => {
     if (!isAuthenticated) {
+      //TODO: adicionar um notify para informar o pq do redirecionamento
       push(APP_ROUTES.public.login);
     }
   }, [isAuthenticated, push]);

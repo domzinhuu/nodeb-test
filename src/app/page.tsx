@@ -95,6 +95,4 @@ function getSession(): User | null {
   return JSON.parse(json);
 }
 
-function clearSession(): void {
-  window.sessionStorage.clear();
-}
+

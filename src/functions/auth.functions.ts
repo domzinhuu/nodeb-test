@@ -15,10 +15,9 @@ export const checkIfIsPublicRoute = (path: string) => {
   return routes.includes(path);
 };
 
-export const checkUserIsAuthenticated = ():boolean => {
+export const checkUserIsAuthenticated = (): boolean => {
   //TODO: descobrir como ver se o usuario ta logado
   const loggedUser = window.sessionStorage.getItem(USER_SESSION);
-
   return !!loggedUser;
 };
 
