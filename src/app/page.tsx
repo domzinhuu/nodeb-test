@@ -1,11 +1,13 @@
 "use client";
 import Button from "@/components/Button";
 import InputText from "@/components/InputText";
+import { USER_SESSION } from "@/constants/variables";
+import { userTable } from "@/data/authentications";
+import { User, checkifUserExist } from "@/functions/auth.functions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useState } from "react";
-import { FiEye, FiUnlock } from "react-icons/fi";
 import { RxLockClosed, RxLockOpen1 } from "react-icons/rx";
 
 export default function Login() {
@@ -17,8 +19,14 @@ export default function Login() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const authentication = () => {
-    console.log(username);
-    console.log(password);
+    const logged = checkifUserExist(username, password);
+    if (!logged) {
+      alert("Não logado");
+      return;
+    }
+
+    saveSession(logged);
+
     router.push("/dashboard");
   };
 
@@ -59,7 +67,11 @@ export default function Login() {
             }
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button disabled={!username || !password} className="disabled:bg-gray-200 disabled:text-gray-600" onClick={authentication}>
+          <Button
+            disabled={!username || !password}
+            className="disabled:bg-gray-200 disabled:text-gray-600"
+            onClick={authentication}
+          >
             Conectar
           </Button>
           <Link href={"/"} className="text-purple-800 mt-2">
@@ -69,4 +81,20 @@ export default function Login() {
       </div>
     </main>
   );
+}
+
+function saveSession(userLogged: User): void {
+  window.sessionStorage.setItem(USER_SESSION, JSON.stringify(userLogged));
+}
+
+function getSession(): User | null {
+  const json = window.sessionStorage.getItem(USER_SESSION);
+
+  if (!json) return null;
+
+  return JSON.parse(json);
+}
+
+function clearSession(): void {
+  window.sessionStorage.clear();
 }
