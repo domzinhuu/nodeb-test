@@ -38,33 +38,29 @@ export default function UserDataSettings() {
 
   if (isLoading) return <span>Loading...</span>;
   return (
-    <main>
-      <h4>Mock de dados de usuário</h4>
-
-      <div className="bg-white lg:w-[50%] w-full rounded-lg p-4 mt-4">
-        <p className="pb-2">
-          Adicione aqui o JSON contendo o request que deseja ver no dashboard.
-        </p>
-        <AceEditor
-          className="rounded-lg"
-          fontSize={14}
-          width="100%"
-          value={userDataJson}
-          onChange={setUserDataJson}
-          mode="json"
-          setOptions={{ useWorker: false }}
-          theme="twilight"
-          name="jsonEditor"
-        />
-        <div className="py-4 flex justify-end">
-          <button
-            onClick={saveUserData}
-            className="bg-purple-800 text-white p-1 rounded-lg w-[100px]"
-          >
-            Salvar
-          </button>
-        </div>
+    <div className="bg-white lg:w-[50%] w-full rounded-lg p-4 mt-4">
+      <p className="pb-2">
+        Adicione aqui o JSON contendo o request que deseja ver no dashboard.
+      </p>
+      <AceEditor
+        className="rounded-lg"
+        fontSize={14}
+        width="100%"
+        value={userDataJson}
+        onChange={setUserDataJson}
+        mode="json"
+        setOptions={{ useWorker: false }}
+        theme="twilight"
+        name="jsonEditor"
+      />
+      <div className="py-4 flex justify-end">
+        <button
+          onClick={saveUserData}
+          className="bg-purple-800 text-white p-1 rounded-lg w-[100px]"
+        >
+          Salvar
+        </button>
       </div>
-    </main>
+    </div>
   );
 }

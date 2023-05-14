@@ -9,7 +9,7 @@ import { use } from "react";
 async function getDashboardDataReq() {
   const response = await fetch(`http://localhost:3000/api/settings`);
   const json = await response.json();
-  const mockData  = JSON.parse(json)
+  const mockData = JSON.parse(json);
   const data = buildResponseData(mockData);
   const consolidateData = filter(data, (item: any) => item);
 
@@ -27,8 +27,7 @@ export default function Dashboard() {
   );
 
   return (
-    <main className="bg-gray-100 min-h-screen">
-      <Header />
+    <>
       <TopCard
         futureSchedule={Number(futureSchedule)}
         lastPayment={lastPayment}
@@ -38,6 +37,6 @@ export default function Dashboard() {
         <DataTable consolidateData={consolidateData} />
         <BarChart />
       </div>
-    </main>
+    </>
   );
 }
