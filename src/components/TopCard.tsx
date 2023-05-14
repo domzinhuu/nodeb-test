@@ -1,6 +1,4 @@
-"use client";
 import { formatToCurrency } from "@/utils/helper.functions";
-import { Skeleton } from "@mui/material";
 import { DateTime } from "luxon";
 import {
   BiCalendarExclamation,
@@ -23,12 +21,7 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
             {futureSchedule ? (
               formatToCurrency(futureSchedule)
             ) : (
-              <Skeleton
-                animation="wave"
-                variant="rounded"
-                width={200}
-                height={30}
-              />
+              <p>Loading...</p>
             )}
           </p>
           <p className="text-gray-600">Agenda Futura</p>
@@ -45,12 +38,7 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
             {lastPayment ? (
               DateTime.fromISO(lastPayment).toFormat("dd/MM/yyyy")
             ) : (
-              <Skeleton
-                animation="wave"
-                variant="rounded"
-                width={200}
-                height={30}
-              />
+              <p>Caregando...</p>
             )}
           </p>
           <p className="text-gray-600">Último Pagamento</p>
@@ -68,12 +56,7 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
             {nextPayment ? (
               DateTime.fromISO(nextPayment.date).toFormat("dd/MM/yyyy")
             ) : (
-              <Skeleton
-                animation="wave"
-                variant="rounded"
-                width={200}
-                height={30}
-              />
+              <p>Loading...</p>
             )}
           </p>
           <p className="text-gray-600">Próximo Pagamento</p>

@@ -1,5 +1,4 @@
 "use client";
-import { Button, Typography } from "@mui/material";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-twilight";
@@ -37,15 +36,15 @@ export default function UserDataSettings() {
     }
   };
 
-  if (isLoading) return <Typography variant="body2">Loading...</Typography>;
+  if (isLoading) return <span>Loading...</span>;
   return (
     <main>
-      <Typography variant="h4">Mock de dados de usuário</Typography>
+      <h4>Mock de dados de usuário</h4>
 
       <div className="bg-white lg:w-[50%] w-full rounded-lg p-4 mt-4">
-        <Typography variant="body1" className="pb-2">
+        <p className="pb-2">
           Adicione aqui o JSON contendo o request que deseja ver no dashboard.
-        </Typography>
+        </p>
         <AceEditor
           className="rounded-lg"
           fontSize={14}
@@ -58,13 +57,12 @@ export default function UserDataSettings() {
           name="jsonEditor"
         />
         <div className="py-4 flex justify-end">
-          <Button
+          <button
             onClick={saveUserData}
-            variant="contained"
             className="bg-purple-800 text-white p-1 rounded-lg w-[100px]"
           >
             Salvar
-          </Button>
+          </button>
         </div>
       </div>
     </main>

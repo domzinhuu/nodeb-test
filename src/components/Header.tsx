@@ -1,14 +1,10 @@
-'use client'
-import { LogoutRounded } from "@mui/icons-material";
-import Typography from "@mui/material/Typography";
-
 function Header() {
   return (
     <div className="flex justify-between items-center px-4 pt-4">
-      <Typography variant="h4" className="lg:h-6 text-md">Dashboard</Typography>
-      <Typography variant="h6" className="lg:h-6 text-sm">
-        Bem vindo, <b>Maique</b> <LogoutRounded />
-      </Typography>
+      <h4 className="lg:h-6 text-md">Dashboard</h4>
+      <h6 className="lg:h-6 text-sm">
+        Bem vindo, <b>Maique</b>
+      </h6>
     </div>
   );
 }

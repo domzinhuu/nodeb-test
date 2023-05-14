@@ -1,12 +1,8 @@
 "use client";
-import * as React from "react";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { buildResponseData, formatToCurrency } from "@/utils/helper.functions";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Paper,
   Table,
   TableBody,
@@ -14,7 +10,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
+import { MdExpandMore, MdExpandLess } from "react-icons/md";
+import * as React from "react";
+import { formatToCurrency } from "@/utils/helper.functions";
 
 interface DataTableProps {
   consolidateData: any[];
@@ -27,7 +27,7 @@ export default function DataTable({ consolidateData }: DataTableProps) {
     (event: any, isExpanded: boolean): void => {
       setExpanded(isExpanded ? panel : false);
     };
-    
+
   return (
     <div className="w-full md:col-span-2 relative lg:h-[70vh] h-[50vh] m-auto border rounded-lg bg-white overflow-y-scroll">
       {consolidateData?.map((row: any) => (
@@ -39,7 +39,9 @@ export default function DataTable({ consolidateData }: DataTableProps) {
         >
           <AccordionSummary
             className="w-full"
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={
+              expanded ? <MdExpandLess /> : <MdExpandMore />
+            }
             aria-controls="panel1bh-content"
             id="panel1bh-header"
           >

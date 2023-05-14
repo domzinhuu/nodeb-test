@@ -1,16 +1,11 @@
-"use client";
-
 import SideBar from "@/components/SideBar";
-import { checkIfIsPublicRoute } from "@/functions/auth.functions";
-import { usePathname } from "next/navigation";
+import { ReactNode } from "react";
 interface SiteLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function SiteLayout({
   children,
 }: SiteLayoutProps) {
-  const path = usePathname();
-  const isPublic = checkIfIsPublicRoute(path);
   return <SideBar>{children}</SideBar>;
 }
