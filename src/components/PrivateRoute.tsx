@@ -3,7 +3,7 @@
 import { APP_ROUTES } from "@/constants/app-routes";
 import { checkUserIsAuthenticated } from "@/functions/auth.functions";
 import { useRouter } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -11,14 +11,16 @@ interface PrivateRouteProps {
 
 const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const { push } = useRouter();
-  const isAuthenticated = checkUserIsAuthenticated();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    const authenticated = checkUserIsAuthenticated();
+    setIsAuthenticated(authenticated);
+    if (!authenticated) {
       //TODO: adicionar um notify para informar o pq do redirecionamento
       push(APP_ROUTES.public.login);
     }
-  }, [isAuthenticated, push]);
+  }, [push]);
 
   return (
     <>

@@ -36,9 +36,8 @@ export default function UserDataSettings() {
     }
   };
 
-  if (isLoading) return <span>Loading...</span>;
   return (
-    <div className="bg-white lg:w-[50%] w-full rounded-lg p-4 mt-4">
+    <div className="bg-white lg:w-[50%] w-full rounded-lg p-4">
       <p className="pb-2">
         Adicione aqui o JSON contendo o request que deseja ver no dashboard.
       </p>

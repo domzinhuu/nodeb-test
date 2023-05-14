@@ -7,7 +7,7 @@ import { User, checkifUserExist } from "@/functions/auth.functions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { RxLockClosed, RxLockOpen1 } from "react-icons/rx";
 
 export default function Login() {
@@ -18,7 +18,8 @@ export default function Login() {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const authentication = () => {
+  const authentication = (form: FormEvent<HTMLFormElement>) => {
+    form.preventDefault();
     const logged = checkifUserExist(username, password);
     if (!logged) {
       alert("Não logado");
@@ -38,7 +39,10 @@ export default function Login() {
         </h1>
         <p>Faça login para ter acesso a plataforma</p>
 
-        <div className="mt-8 flex flex-col gap-8">
+        <form
+          onSubmit={(e) => authentication(e)}
+          className="mt-8 flex flex-col gap-8"
+        >
           <InputText
             label="Login"
             name="login"
@@ -70,14 +74,14 @@ export default function Login() {
           <Button
             disabled={!username || !password}
             className="disabled:bg-gray-200 disabled:text-gray-600"
-            onClick={authentication}
+            type="submit"
           >
             Conectar
           </Button>
           <Link href={"/"} className="text-purple-800 mt-2">
             Esqueci minha senha
           </Link>
-        </div>
+        </form>
       </div>
     </main>
   );
@@ -94,5 +98,3 @@ function getSession(): User | null {
 
   return JSON.parse(json);
 }
-
-

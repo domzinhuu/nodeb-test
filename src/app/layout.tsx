@@ -16,11 +16,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const path = usePathname();
   const { push } = useRouter();
   const isPublic = checkIfIsPublicRoute(path);
-  const alreadyAuthenticated = checkUserIsAuthenticated();
+  const [alreadyAuthenticated, setAlreadyAuthenticated] = useState(false);
   const [loggedUser, setLoggedUser] = useState<User>();
 
   useEffect(() => {
-    if (alreadyAuthenticated && !loggedUser) {
+    const authenticated = checkUserIsAuthenticated();
+    setAlreadyAuthenticated(authenticated);
+    
+    if (authenticated && !loggedUser) {
       const json = window.sessionStorage.getItem(USER_SESSION);
       const user: User = JSON.parse(json!);
       setLoggedUser(user);

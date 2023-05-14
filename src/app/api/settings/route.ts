@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const file = fs.readFileSync(directory, { encoding: "utf-8" });
+
     return NextResponse.json(JSON.parse(file));
   } catch (error) {
     return NextResponse.json(mockData);
