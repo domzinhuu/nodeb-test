@@ -6,7 +6,8 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/ext-beautify";
 
 import { useEffect, useState } from "react";
-import { API_URL } from "@/constants/variables";
+import { toast } from "react-toastify";
+import Button from "./Button";
 
 export default function UserDataSettings() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -23,6 +24,7 @@ export default function UserDataSettings() {
   }, []);
 
   const saveUserData = async () => {
+    setIsLoading(true);
     if (userDataJson) {
       await fetch("http://localhost:3000/api/settings", {
         method: "POST",
@@ -30,9 +32,14 @@ export default function UserDataSettings() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userDataJson),
+      }).then(() => {
+        toast.success("Dados salvos com sucesso!", {
+          autoClose: 3000,
+          theme: "colored",
+          position: "top-right",
+        });
+        setIsLoading(false);
       });
-
-      alert("Salvo!");
     }
   };
 
@@ -53,12 +60,13 @@ export default function UserDataSettings() {
         name="jsonEditor"
       />
       <div className="py-4 flex justify-end">
-        <button
+        <Button
+          disabled={isLoading || !userDataJson}
           onClick={saveUserData}
-          className="bg-purple-800 text-white p-1 rounded-lg w-[100px]"
+          className="disabled:bg-gray-200 disabled:text-gray-600"
         >
           Salvar
-        </button>
+        </Button>
       </div>
     </div>
   );

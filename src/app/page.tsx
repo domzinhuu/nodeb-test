@@ -2,15 +2,17 @@
 import Button from "@/components/Button";
 import InputText from "@/components/InputText";
 import { USER_SESSION } from "@/constants/variables";
-import { userTable } from "@/data/authentications";
 import { User, checkifUserExist } from "@/functions/auth.functions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { FormEvent, useState } from "react";
 import { RxLockClosed, RxLockOpen1 } from "react-icons/rx";
+import { AiOutlineLoading } from "react-icons/ai";
+import { toast } from "react-toastify";
 
 export default function Login() {
+  const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -20,15 +22,26 @@ export default function Login() {
 
   const authentication = (form: FormEvent<HTMLFormElement>) => {
     form.preventDefault();
-    const logged = checkifUserExist(username, password);
-    if (!logged) {
-      alert("Não logado");
-      return;
-    }
+    setIsLoading(true);
+    let logged;
+    setTimeout(() => {
+      logged = checkifUserExist(username, password);
+      if (!logged) {
+        toast.error("Login ou senha incorreto!", {
+          autoClose: 3000,
+          position: "top-right",
+          closeOnClick: true,
+          theme: "colored",
+        });
+        setIsLoading(false);
+        return;
+      }
 
-    saveSession(logged);
+      saveSession(logged);
 
-    router.push("/dashboard");
+      router.push("/dashboard");
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (

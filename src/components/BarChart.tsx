@@ -9,9 +9,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "@/app/context/UserContext";
-import { colors } from "@mui/material";
+import { useEffect, useState } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -23,7 +21,7 @@ ChartJS.register(
 );
 
 interface BarchartProps {
-  data: any[];
+  data: any;
 }
 
 const colorList: any[] = [
@@ -41,13 +39,12 @@ function BarChart({ data }: BarchartProps) {
     datasets: [],
   });
 
-  console.log(data);
   const [chartOptions, setChartOptions] = useState<any>({});
 
   useEffect(() => {
     setChartData({
       labels: ["Período atual"],
-      datasets: data.map((info: any, index: number) => {
+      datasets: data.consolidateData?.map((info: any, index: number) => {
         const color =
           colorList.length > index ? colorList[index] : colorList[0];
 

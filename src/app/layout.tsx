@@ -11,6 +11,8 @@ import PrivateRoute from "@/components/PrivateRoute";
 import { APP_ROUTES } from "@/constants/app-routes";
 import { UserContext } from "./context/UserContext";
 import { USER_SESSION } from "@/constants/variables";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const path = usePathname();
@@ -21,18 +23,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const authenticated = checkUserIsAuthenticated();
+
     setAlreadyAuthenticated(authenticated);
-    
     if (authenticated && !loggedUser) {
       const json = window.sessionStorage.getItem(USER_SESSION);
       const user: User = JSON.parse(json!);
       setLoggedUser(user);
     }
 
-    if (isPublic && alreadyAuthenticated) {
+    if (isPublic && authenticated) {
       push(APP_ROUTES.private.dashboard.name);
     }
-  }, [loggedUser, alreadyAuthenticated, isPublic, push]);
+  }, [loggedUser, isPublic, push]);
 
   return (
     <html lang="en">
@@ -44,6 +46,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <PrivateRoute>{children}</PrivateRoute>
           </UserContext.Provider>
         )}
+        <ToastContainer />
       </body>
     </html>
   );

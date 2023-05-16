@@ -17,10 +17,10 @@ import * as React from "react";
 import { formatToCurrency } from "@/utils/helper.functions";
 
 interface DataTableProps {
-  consolidateData: any[];
+  data: any;
 }
 
-export default function DataTable({ consolidateData }: DataTableProps) {
+export default function DataTable({ data }: DataTableProps) {
   const [expanded, setExpanded] = React.useState(false);
   const handleChange =
     (panel: any) =>
@@ -30,7 +30,7 @@ export default function DataTable({ consolidateData }: DataTableProps) {
 
   return (
     <div className="w-full md:col-span-2 relative lg:h-[70vh] h-[50vh] m-auto border rounded-lg bg-white overflow-y-scroll">
-      {consolidateData?.map((row: any) => (
+      {data.consolidateData?.map((row: any) => (
         <Accordion
           className="hover:bg-slate-50"
           key={row.document}
