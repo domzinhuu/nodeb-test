@@ -4,7 +4,7 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/ext-beautify";
-
+import { js_beautify } from "js-beautify";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Button from "./Button";
@@ -13,11 +13,14 @@ export default function UserDataSettings() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userDataJson, setUserDataJson] = useState("");
   useEffect(() => {
-    fetch("http://localhost:3000/api/settings")
+    fetch("http://173.230.136.213:8080/node-api/userdata")
       .then((res) => res.json())
       .then((data) => {
         if (data) {
-          setUserDataJson(data);
+          const { _id, __v, ...otherParams } = data[0]; // removendo o _id e a versão pois não preciso, checkar para tirar isso na api
+          const jsonStringify = JSON.stringify(otherParams);
+          const options = { indent_size: 2, space_in_empty_paren: true };
+          setUserDataJson(js_beautify(jsonStringify, options));
         }
         setIsLoading(false);
       });
@@ -26,12 +29,12 @@ export default function UserDataSettings() {
   const saveUserData = async () => {
     setIsLoading(true);
     if (userDataJson) {
-      await fetch("http://localhost:3000/api/settings", {
+      await fetch("http://173.230.136.213:8080/node-api/userdata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userDataJson),
+        body: userDataJson,
       }).then(() => {
         toast.success("Dados salvos com sucesso!", {
           autoClose: 3000,

@@ -1,2 +1,2 @@
-export const API_URL = "127.0.0.1:3000/api"
+export const API_URL = "http://localhost:8080" //http://173.230.136.213:8080
 export const USER_SESSION = "userSession"

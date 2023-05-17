@@ -16,7 +16,7 @@ export default function Dashboard() {
           { cache: "force-cache", next: { revalidate: 10 } }
         );
         const data = await response.json();
-        setData(data);
+        setData(data[0]);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
