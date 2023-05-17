@@ -1,8 +1,12 @@
 "use client";
 
 import { APP_ROUTES } from "@/constants/app-routes";
-import { checkUserIsAuthenticated } from "@/functions/auth.functions";
-import { useRouter } from "next/navigation";
+import { USER_SESSION } from "@/constants/variables";
+import {
+  checkIfUserHasAdminRole,
+  checkUserIsAuthenticated,
+} from "@/functions/auth.functions";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
 interface PrivateRouteProps {
@@ -10,17 +14,29 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute = ({ children }: PrivateRouteProps) => {
-  const { push } = useRouter();
+  const { push, replace } = useRouter();
+  const pathName = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const authenticated = checkUserIsAuthenticated();
+    const loggedUser = window.sessionStorage.getItem(USER_SESSION);
+    const user = loggedUser && JSON.parse(loggedUser);
+
+    if (
+      authenticated &&
+      pathName.includes("settings") &&
+      !checkIfUserHasAdminRole(user?.id)
+    ) {
+      push(APP_ROUTES.private.dashboard.name);
+    }
+
     setIsAuthenticated(authenticated);
     if (!authenticated) {
       //TODO: adicionar um notify para informar o pq do redirecionamento
-      push(APP_ROUTES.public.login);
+      replace(APP_ROUTES.public.login);
     }
-  }, [push]);
+  }, [push, replace, pathName]);
 
   return (
     <>

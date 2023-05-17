@@ -13,11 +13,11 @@ export default function UserDataSettings() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userDataJson, setUserDataJson] = useState("");
   useEffect(() => {
-    fetch("http://173.230.136.213:8080/node-api/userdata")
+    fetch("http://173.230.136.213:8080/node-api/settings")
       .then((res) => res.json())
       .then((data) => {
         if (data) {
-          const { _id, __v, ...otherParams } = data[0]; // removendo o _id e a versão pois não preciso, checkar para tirar isso na api
+          const { _id, __v, ...otherParams } = data; // removendo o _id e a versão pois não preciso, checkar para tirar isso na api
           const jsonStringify = JSON.stringify(otherParams);
           const options = { indent_size: 2, space_in_empty_paren: true };
           setUserDataJson(js_beautify(jsonStringify, options));
