@@ -13,7 +13,7 @@ export default function UserDataSettings() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userDataJson, setUserDataJson] = useState("");
   useEffect(() => {
-    fetch("https://173.230.136.213/node-api/settings")
+    fetch("https://msrsoftware.com.br/node-api/settings")
       .then((res) => res.json())
       .then((data) => {
         if (data) {
@@ -29,7 +29,7 @@ export default function UserDataSettings() {
   const saveUserData = async () => {
     setIsLoading(true);
     if (userDataJson) {
-      await fetch("https://173.230.136.213/node-api/userdata", {
+      await fetch("https://msrsoftware.com.br/node-api/userdata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

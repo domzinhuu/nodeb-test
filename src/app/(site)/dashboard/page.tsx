@@ -12,7 +12,7 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://173.230.136.213/node-api/userdata",
+          "https://msrsoftware.com.br/node-api/userdata",
           { cache: "force-cache", next: { revalidate: 10 } }
         );
         const data = await response.json();
