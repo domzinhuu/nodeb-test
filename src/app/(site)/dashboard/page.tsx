@@ -12,7 +12,7 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://173.230.136.213:8080/node-api/userdata",
+          "https://173.230.136.213/node-api/userdata",
           { cache: "force-cache", next: { revalidate: 10 } }
         );
         const data = await response.json();
