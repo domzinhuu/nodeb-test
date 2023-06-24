@@ -103,11 +103,3 @@ export default function Login() {
 function saveSession(userLogged: User): void {
   window.sessionStorage.setItem(USER_SESSION, JSON.stringify(userLogged));
 }
-
-function getSession(): User | null {
-  const json = window.sessionStorage.getItem(USER_SESSION);
-
-  if (!json) return null;
-
-  return JSON.parse(json);
-}

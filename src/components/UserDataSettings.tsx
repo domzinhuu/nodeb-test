@@ -8,41 +8,36 @@ import { js_beautify } from "js-beautify";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Button from "./Button";
+import { SettingService } from "@/services/settings";
 
 export default function UserDataSettings() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userDataJson, setUserDataJson] = useState("");
+
+  async function fetchSettings() {
+    const settings = await SettingService.getSettings();
+
+    const options = { indent_size: 2, space_in_empty_paren: true };
+    setUserDataJson(js_beautify(settings, options));
+    setIsLoading(false);
+  }
+
   useEffect(() => {
-    fetch("https://msrsoftware.com.br/node-api/settings")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          const { _id, __v, ...otherParams } = data; // removendo o _id e a versão pois não preciso, checkar para tirar isso na api
-          const jsonStringify = JSON.stringify(otherParams);
-          const options = { indent_size: 2, space_in_empty_paren: true };
-          setUserDataJson(js_beautify(jsonStringify, options));
-        }
-        setIsLoading(false);
-      });
+    fetchSettings();
   }, []);
 
   const saveUserData = async () => {
     setIsLoading(true);
     if (userDataJson) {
-      await fetch("https://msrsoftware.com.br/node-api/userdata", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: userDataJson,
-      }).then(() => {
-        toast.success("Dados salvos com sucesso!", {
-          autoClose: 3000,
-          theme: "colored",
-          position: "top-right",
-        });
-        setIsLoading(false);
+      debugger;
+      await SettingService.postSetting(userDataJson);
+
+      toast.success("Dados salvos com sucesso!", {
+        autoClose: 3000,
+        theme: "colored",
+        position: "top-right",
       });
+      setIsLoading(false);
     }
   };
 

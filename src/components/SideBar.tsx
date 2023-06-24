@@ -3,28 +3,26 @@ import Link from "next/link";
 import { RxDashboard } from "react-icons/rx";
 import { FiLogOut, FiSettings } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "@/app/context/UserContext";
 import { checkIfUserHasAdminRole } from "@/functions/auth.functions";
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/constants/app-routes";
+import { AuthContext } from "@/app/context/AuthContext";
 
 function SideBar({ children }: any) {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const { id } = useContext<any>(UserContext);
-  const { setLoggedUser } = useContext<any>(UserContext);
+  const { user } = useContext(AuthContext);
 
   const { replace } = useRouter();
 
   const logout = (): void => {
     clearSession();
-    setLoggedUser(null);
     replace(APP_ROUTES.public.login);
   };
 
   useEffect(() => {
-    const userAdmin = checkIfUserHasAdminRole(id);
+    const userAdmin = checkIfUserHasAdminRole(user.id);
     setIsAdmin(userAdmin);
-  }, [id]);
+  }, [user]);
   return (
     <div className="flex lg:flex-row flex-col-reverse ">
       <MenuMobile logout={logout} isAdmin={isAdmin} />
