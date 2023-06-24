@@ -1,18 +1,20 @@
 "use client";
 
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
-
+import { UseFormRegister } from "react-hook-form";
 interface InputTextProps {
   id?: string;
-  name?: string;
+  name: string;
   label?: string;
   secure?: boolean;
   className?: string;
   inputClass?: string;
   showIcon?: boolean;
   icon?: ReactNode;
-  value: any;
-  onChange: (el: any) => void;
+  value?: any;
+  useForm?: boolean;
+  onChange?: (el: any) => void;
+  register?: UseFormRegister<any>;
 }
 
 const InputText = (props: InputTextProps) => {
@@ -29,16 +31,25 @@ const InputText = (props: InputTextProps) => {
           {props.name}
         </label>
         {props.showIcon && props.icon}
-        <input
-          id={props.id}
-          type={props.secure ? "password" : "text"}
-          name={props.name}
-          value={props.value}
-          onChange={props.onChange}
-          onFocus={(e) => setHasFocus(true)}
-          onBlur={() => setHasFocus(false)}
-          className={`p-1 absolute w-full border-b border-b-gray-400 outline-none bg-transparent ${props.inputClass}`}
-        />
+        {props.useForm && props.register ? (
+          <input
+            id={props.id}
+            type={props.secure ? "password" : "text"}
+            {...props.register(props.name)}
+            className={`p-1 absolute w-full border-b border-b-gray-400 outline-none bg-transparent ${props.inputClass}`}
+          />
+        ) : (
+          <input
+            id={props.id}
+            type={props.secure ? "password" : "text"}
+            name={props.name}
+            value={props.value}
+            onChange={props.onChange}
+            onFocus={(e) => setHasFocus(true)}
+            onBlur={() => setHasFocus(false)}
+            className={`p-1 absolute w-full border-b border-b-gray-400 outline-none bg-transparent ${props.inputClass}`}
+          />
+        )}
       </div>
     </div>
   );

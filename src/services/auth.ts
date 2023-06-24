@@ -11,7 +11,7 @@ async function login(
     return null;
   }
 
-  const user: UserData = response.data;
+  const user: UserData = response.data[0];
 
   if (user.password !== password) {
     return null;

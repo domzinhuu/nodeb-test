@@ -6,42 +6,39 @@ import { User, checkifUserExist } from "@/functions/auth.functions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { RxLockClosed, RxLockOpen1 } from "react-icons/rx";
 import { AiOutlineLoading } from "react-icons/ai";
 import { toast } from "react-toastify";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AuthContext } from "./context/AuthContext";
+
+const loginFormSchema = z.object({
+  username: z.string().min(1),
+  password: z.string().min(1),
+});
+
+type LoginFormInputs = z.infer<typeof loginFormSchema>;
 
 export default function Login() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, isValid },
+  } = useForm<LoginFormInputs>({
+    resolver: zodResolver(loginFormSchema),
+  });
+  const { login } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const authentication = (form: FormEvent<HTMLFormElement>) => {
-    form.preventDefault();
-    setIsLoading(true);
-    let logged;
-    setTimeout(() => {
-      logged = checkifUserExist(username, password);
-      if (!logged) {
-        toast.error("Login ou senha incorreto!", {
-          autoClose: 3000,
-          position: "top-right",
-          closeOnClick: true,
-          theme: "colored",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      saveSession(logged);
-
-      router.push("/dashboard");
-      setIsLoading(false);
-    }, 1000);
+  const authentication = async (data: LoginFormInputs) => {
+    await login(data.username, data.password);
+    router.push("/dashboard");
   };
 
   return (
@@ -53,21 +50,22 @@ export default function Login() {
         <p>Faça login para ter acesso a plataforma</p>
 
         <form
-          onSubmit={(e) => authentication(e)}
+          onSubmit={handleSubmit(authentication)}
           className="mt-8 flex flex-col gap-8"
         >
           <InputText
             label="Login"
-            name="login"
+            name="username"
             className="pb-8"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            useForm={true}
+            register={register}
           />
           <InputText
             label="Senha"
             name="password"
             secure={showPassword ? false : true}
-            value={password}
+            useForm={true}
+            register={register}
             showIcon={true}
             icon={
               showPassword ? (
@@ -82,10 +80,10 @@ export default function Login() {
                 />
               )
             }
-            onChange={(e) => setPassword(e.target.value)}
           />
           <Button
-            disabled={!username || !password}
+            isLoading={isSubmitting}
+            disabled={!isValid}
             className="disabled:bg-gray-200 disabled:text-gray-600"
             type="submit"
           >

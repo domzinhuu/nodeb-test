@@ -15,13 +15,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-gray-50">
-        {isPublic && children}
-        {!isPublic && (
-          <AuthContextProvider>
-            <PrivateRoute>{children}</PrivateRoute>
-          </AuthContextProvider>
-        )}
-        <ToastContainer />
+        <AuthContextProvider>
+          {isPublic && children}
+          {!isPublic && <PrivateRoute>{children}</PrivateRoute>}
+          <ToastContainer />
+        </AuthContextProvider>
       </body>
     </html>
   );
