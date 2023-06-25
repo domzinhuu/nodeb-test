@@ -15,6 +15,7 @@ import {
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import * as React from "react";
 import { formatToCurrency } from "@/utils/helper.functions";
+import { DashboardContext } from "@/app/context/DashboardContext";
 
 interface DataTableProps {
   data: any;
@@ -22,6 +23,7 @@ interface DataTableProps {
 
 export default function DataTable({ data }: DataTableProps) {
   const [expanded, setExpanded] = React.useState(false);
+  const { consolidateData } = React.useContext(DashboardContext);
   const handleChange =
     (panel: any) =>
     (event: any, isExpanded: boolean): void => {
@@ -30,7 +32,7 @@ export default function DataTable({ data }: DataTableProps) {
 
   return (
     <div className="w-full md:col-span-2 relative lg:h-[70vh] h-[50vh] m-auto border rounded-lg bg-white overflow-y-scroll">
-      {data.consolidateData?.map((row: any) => (
+      {consolidateData?.map((row: any) => (
         <Accordion
           className="hover:bg-slate-50"
           key={row.document}
@@ -39,9 +41,7 @@ export default function DataTable({ data }: DataTableProps) {
         >
           <AccordionSummary
             className="w-full"
-            expandIcon={
-              expanded ? <MdExpandLess /> : <MdExpandMore />
-            }
+            expandIcon={expanded ? <MdExpandLess /> : <MdExpandMore />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
           >
@@ -90,35 +90,35 @@ export default function DataTable({ data }: DataTableProps) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.acquirers.map((item: any) => (
+                  {row.acquirers.map((acquirer: any) => (
                     <TableRow
-                      key={item.acquirer}
+                      key={acquirer.document}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
                         <Typography variant="body1">
                           {" "}
-                          {item.acquirer} - Nome Adquirente
+                          {acquirer.document} - Nome Adquirente
                         </Typography>
                       </TableCell>
                       <TableCell align="right">
                         <Typography variant="body1">
-                          {item.ultimoPagamento}
+                          {acquirer.ultimoPagamento}
                         </Typography>
                       </TableCell>
                       <TableCell align="right">
                         <Typography variant="body1">
-                          {formatToCurrency(item.valorPagar)}
+                          {formatToCurrency(acquirer.valorPagar)}
                         </Typography>
                       </TableCell>
                       <TableCell align="right">
                         <Typography variant="body1">
-                          {formatToCurrency(item.valorReceber)}
+                          {formatToCurrency(acquirer.valorReceber)}
                         </Typography>
                       </TableCell>
                       <TableCell align="right">
                         <Typography variant="body1">
-                          {formatToCurrency(item.valorTotal)}
+                          {formatToCurrency(acquirer.valorTotal)}
                         </Typography>
                       </TableCell>
                     </TableRow>

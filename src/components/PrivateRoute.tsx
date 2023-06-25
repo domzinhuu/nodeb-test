@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardContextProvider } from "@/app/context/DashboardContext";
 import { APP_ROUTES } from "@/constants/app-routes";
 import { USER_SESSION } from "@/constants/variables";
 import {
@@ -41,7 +42,10 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
   return (
     <>
       {!isAuthenticated && null}
-      {isAuthenticated && children}
+
+      {isAuthenticated && (
+        <DashboardContextProvider>{children}</DashboardContextProvider>
+      )}
     </>
   );
 };
