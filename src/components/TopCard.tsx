@@ -1,5 +1,5 @@
 import { formatToCurrency } from "@/utils/helper.functions";
-import { DateTime } from "luxon";
+import { Info } from "phosphor-react";
 import {
   BiCalendarExclamation,
   BiCalendarStar,
@@ -15,16 +15,21 @@ interface TopCardProps {
 function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
   return (
     <div className="grid lg:grid-cols-6 gap-4 p-4">
-      <div className="lg:col-span-2 col-span-1 flex bg-white justify-between w-full border p-4 rounded-lg">
+      <div className="lg:col-span-4 col-span-1 flex bg-white justify-between w-full border p-4 rounded-lg h-[106px]">
         <div className="flex flex-col w-full pb-4">
           <span className="text-2xl font-bold">
             {futureSchedule ? (
-              formatToCurrency(futureSchedule)
+              <div className="flex gap-3 items-center">
+                {formatToCurrency(futureSchedule)}
+                <Info size={24} className="text-purple-700 cursor-pointer" />
+              </div>
             ) : (
               <span>Loading...</span>
             )}
           </span>
-          <span className="text-gray-600">Agenda Futura</span>
+          <span className="text-gray-600">
+            Valor total a receber até: <strong>22/11/2042</strong>
+          </span>
         </div>
         <span className="bg-green-200 w-20 flex justify-center items-center p-2 rounded-lg">
           <span className="text-green-700 text-lg">
@@ -32,16 +37,16 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
           </span>
         </span>
       </div>
-      <div className="lg:col-span-2 col-span-1 flex bg-white justify-between w-full border p-4 rounded">
+
+      <div className="lg:col-span-2 col-span-1 flex bg-white justify-between w-full border p-4 rounded-lg h-[106px]">
         <div className="flex flex-col w-full pb-4">
-          <span className="text-2xl font-bold">
-            {lastPayment ? (
-              DateTime.fromISO(lastPayment).toFormat("dd/MM/yyyy")
-            ) : (
-              <span>Caregando...</span>
-            )}
+          <span className="text-2xl font-bold">Pagamentos Previstos</span>
+          <span className="text-gray-600">
+            11/06/2023: <strong>{formatToCurrency(1000)}</strong>
           </span>
-          <span className="text-gray-600">Último Pagamento</span>
+          <span className="text-gray-600">
+            11/06/2023: <strong>{formatToCurrency(1000)}</strong>
+          </span>
         </div>
         <span className="bg-green-200 w-20 flex justify-center items-center p-2 rounded-lg">
           <span className="text-green-700 text-lg">
@@ -50,9 +55,9 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
         </span>
       </div>
 
-      <div className="lg:col-span-2 col-span-1 flex bg-white justify-between w-full border p-4 rounded-lg">
+      {/*  <div className="lg:col-span-2 col-span-1 flex bg-white justify-between w-full border p-4 rounded-lg h-[106px]">
         <div className="flex flex-col w-full pb-4">
-          <span className="text-2xl font-bold">
+          <span className="text-xl font-bold">
             {nextPayment ? (
               DateTime.fromISO(nextPayment).toFormat("dd/MM/yyyy")
             ) : (
@@ -66,7 +71,7 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
             <BiCalendarStar size={28} />
           </span>
         </span>
-      </div>
+      </div> */}
     </div>
   );
 }

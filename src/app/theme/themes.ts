@@ -16,5 +16,8 @@ export const lightTheme = createTheme({
       800: "#6b21a8",
       900: "#581c87",
     },
+    error: {
+      "500": "salmon",
+    },
   },
 });

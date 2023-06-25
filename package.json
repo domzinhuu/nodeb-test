@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:server": "json-server server.json --routes routes.json -p 8080 -w -d 1000",
+    "dev:server": "json-server server.json --routes routes.json -p 8080 -w -d 500",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -30,6 +30,7 @@
     "mongoose": "^7.1.1",
     "next": "13.4.1",
     "next-intl": "^2.13.2",
+    "phosphor-react": "^1.4.1",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-ace": "^10.1.0",

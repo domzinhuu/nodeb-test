@@ -1,21 +1,12 @@
 "use client";
+import { DashboardContext } from "@/app/context/DashboardContext";
 import BarChart from "@/components/BarChart";
 import DataTable from "@/components/DataTable";
 import TopCard from "@/components/TopCard";
-import { DashboardService } from "@/services/dashboard";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 
 export default function Dashboard() {
-  const [data, setData] = useState<any>({});
-  async function fetchData() {
-    const response = await DashboardService.fetchDashboardData();
-    setData(response);
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+  const { data } = useContext(DashboardContext);
   return (
     data && (
       <>
