@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:server": "json-server server.json --routes routes.json -p 8080 -w -d 1000",
+    "dev:server": "json-server server.json --routes routes.json -p 8080 -w -d 500",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

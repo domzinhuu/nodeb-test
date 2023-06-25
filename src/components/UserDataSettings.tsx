@@ -11,20 +11,8 @@ import Button from "./Button";
 import { SettingService } from "@/services/settings";
 
 export default function UserDataSettings() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userDataJson, setUserDataJson] = useState("");
-
-  async function fetchSettings() {
-    const settings = await SettingService.getSettings();
-
-    const options = { indent_size: 2, space_in_empty_paren: true };
-    setUserDataJson(js_beautify(settings, options));
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    fetchSettings();
-  }, []);
 
   const saveUserData = async () => {
     setIsLoading(true);
@@ -59,6 +47,7 @@ export default function UserDataSettings() {
       />
       <div className="py-4 flex justify-end">
         <Button
+          isLoading={isLoading}
           disabled={isLoading || !userDataJson}
           onClick={saveUserData}
           className="disabled:bg-gray-200 disabled:text-gray-600"

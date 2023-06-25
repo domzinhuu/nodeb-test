@@ -2,7 +2,8 @@
 
 import { USER_SESSION } from "@/constants/variables";
 import { AuthService } from "@/services/auth";
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export interface UserData {
   id: string;
@@ -27,6 +28,7 @@ export const AuthContext = createContext({} as AuthContextData);
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [userLogged, setUserLogged] = useState({} as UserData);
+  const router = useRouter();
 
   async function login(
     username: string,
@@ -46,6 +48,17 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   function saveSession(userLogged: UserData): void {
     window.sessionStorage.setItem(USER_SESSION, JSON.stringify(userLogged));
   }
+
+  useEffect(() => {
+    const user = window.sessionStorage.getItem(USER_SESSION);
+    if (!user) {
+      router.replace("/");
+      return;
+    }
+
+    setIsLogged(true);
+    setUserLogged(JSON.parse(user));
+  }, [router]);
 
   return (
     <AuthContext.Provider value={{ user: userLogged, isLogged, login }}>

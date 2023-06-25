@@ -2,14 +2,11 @@
 import Button from "@/components/Button";
 import InputText from "@/components/InputText";
 import { USER_SESSION } from "@/constants/variables";
-import { User, checkifUserExist } from "@/functions/auth.functions";
+import { User } from "@/functions/auth.functions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-import { FormEvent, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { RxLockClosed, RxLockOpen1 } from "react-icons/rx";
-import { AiOutlineLoading } from "react-icons/ai";
-import { toast } from "react-toastify";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
