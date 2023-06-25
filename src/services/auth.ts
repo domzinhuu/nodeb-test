@@ -5,7 +5,7 @@ async function login(
   userName: string,
   password: string
 ): Promise<UserData | null> {
-  const response = await api.get(`/user/${userName}`);
+  const response = await api.get(`/users?email=${userName}`);
 
   if (!response.data) {
     return null;
