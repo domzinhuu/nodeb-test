@@ -36,6 +36,8 @@ const InputText = (props: InputTextProps) => {
             id={props.id}
             type={props.secure ? "password" : "text"}
             {...props.register(props.name)}
+            onBlur={() => setHasFocus(false)}
+            onFocus={(e) => setHasFocus(true)}
             className={`p-1 absolute w-full border-b border-b-gray-400 outline-none bg-transparent ${props.inputClass}`}
           />
         ) : (
