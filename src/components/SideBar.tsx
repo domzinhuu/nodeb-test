@@ -46,7 +46,7 @@ function SideBar({ children }: any) {
           )}
           <span className="my-4 border-b-[1px] border-gray-200 w-full p-2"></span>
           <div onClick={logout}>
-            <div className="bg-gray-200 text-purple-800 p-3 rounded-lg inline-block">
+            <div className="bg-gray-200 text-purple-800 p-3 rounded-lg inline-block cursor-pointer">
               <FiLogOut size={20} />
             </div>
           </div>

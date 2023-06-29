@@ -1,10 +1,9 @@
 import { formatToCurrency } from "@/utils/helper.functions";
 import { Info } from "phosphor-react";
-import {
-  BiCalendarExclamation,
-  BiCalendarStar,
-  BiTrendingUp,
-} from "react-icons/bi";
+import { BiCalendarExclamation, BiTrendingUp } from "react-icons/bi";
+import * as Tooltip from "@radix-ui/react-tooltip";
+import { NodebTooltip } from "./Tooltip";
+import React from "react";
 
 interface TopCardProps {
   futureSchedule: number;
@@ -21,7 +20,20 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
             {futureSchedule ? (
               <div className="flex gap-3 items-center">
                 {formatToCurrency(futureSchedule)}
-                <Info size={24} className="text-purple-700 cursor-pointer" />
+
+                <NodebTooltip
+                  content={
+                    <React.Fragment>
+                      <p>
+                        Aqui é a soma do valor que você tem a receber em todas
+                        as credenciadoras até <b>[DATA_AQUI]</b> que é a data do
+                        último pagamento agendado.
+                      </p>
+                    </React.Fragment>
+                  }
+                >
+                  <Info size={24} className="text-purple-700 cursor-pointer" />
+                </NodebTooltip>
               </div>
             ) : (
               <span>Loading...</span>

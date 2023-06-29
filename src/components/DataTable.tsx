@@ -17,10 +17,36 @@ import * as React from "react";
 import { formatToCurrency } from "@/utils/helper.functions";
 import { DashboardContext } from "@/app/context/DashboardContext";
 import { Info } from "phosphor-react";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
+import { NodebTooltip } from "./Tooltip";
 
 interface DataTableProps {
   data: any;
 }
+
+const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(() => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#f5f5f9",
+    color: "rgba(0, 0, 0, 0.87)",
+    width: "100%",
+    maxWidth: 450,
+    fontSize: "0.75rem",
+    border: "1px solid #dadde9",
+    padding: "1rem",
+  },
+  [`& .${tooltipClasses.tooltip} p`]: {
+    paddingBottom: "0.5rem",
+  },
+  [`& .${tooltipClasses.tooltip} ul li:first-child`]: {
+    paddingTop: "1rem",
+  },
+  [`& .${tooltipClasses.tooltip} ul li`]: {
+    paddingBottom: "1rem",
+  },
+}));
 
 export default function DataTable({ data }: DataTableProps) {
   const [expanded, setExpanded] = React.useState(false);
@@ -36,7 +62,46 @@ export default function DataTable({ data }: DataTableProps) {
       <div className="p-4">
         <p className="text-2xl font-bold w-full flex items-center gap-2">
           Comércios
-          <Info size={24} className="text-purple-700 cursor-pointer" />
+          <NodebTooltip
+            content={
+              <React.Fragment>
+                <Typography color="inherit">INFORMAÇÃO</Typography>
+                <u>Visão dos valores separados por credenciador, sendo:</u>
+                <ul>
+                  <li>
+                    {" "}
+                    <b>- Último pagamento agendado:</b>{" "}
+                    <em>A data do pagamento futuro mais distante</em>
+                  </li>
+                  <li>
+                    <b>- Valor a comprometido:</b>{" "}
+                    <em>
+                      Montante descontado da sua agenda que foi utilizado em
+                      alguma negociação (ex: antecipação, cessão de garantia,
+                      etc...)
+                    </em>
+                  </li>
+                  <li>
+                    <b>- Valor a receber:</b>{" "}
+                    <em>
+                      Valor líquido que você irá receber ou que poderá usar em
+                      alguma negociação
+                    </em>
+                  </li>
+                  <li>
+                    <b>- Valor total:</b>{" "}
+                    <em>
+                      montante referente a todo valor transacionado que compõe
+                      sua agenda
+                    </em>
+                    (valor comprometido + valor a receber)
+                  </li>
+                </ul>
+              </React.Fragment>
+            }
+          >
+            <Info size={24} className="text-purple-700 cursor-pointer" />
+          </NodebTooltip>
         </p>
       </div>
       {consolidateData?.map((row: any) => (
