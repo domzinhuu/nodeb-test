@@ -21,7 +21,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   [`& .${tooltipClasses.tooltip} p`]: {
     paddingBottom: "0.5rem",
   },
-  [`& .${tooltipClasses.tooltip} ul li:first-child`]: {
+  [`& .${tooltipClasses.tooltip} ul li:first-of-type`]: {
     paddingTop: "1rem",
   },
   [`& .${tooltipClasses.tooltip} ul li`]: {

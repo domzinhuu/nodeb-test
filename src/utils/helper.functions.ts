@@ -1,4 +1,3 @@
-import { ConsolidateData } from "@/app/context/DashboardContext";
 import { sumBy } from "lodash";
 
 const formatter = new Intl.NumberFormat("pt-BR", {
@@ -30,4 +29,16 @@ export function buildResponseData(mockData: any) {
   });
 
   return consolidate;
+}
+
+export function getChartColors() {
+  return [
+    { border: "rgb(81, 18, 133)", bgColor: "rgb(81, 18, 133, 0.8)" },
+    { border: "rgb(176, 14, 221)", bgColor: "rgb(176, 14, 221, 0.8)" },
+    { border: "rgb(220, 12, 209)", bgColor: "rgb(220, 12, 209, 0.8)" },
+    { border: "rgb(142, 2, 98)", bgColor: "rgb(142, 2, 98, 0.8)" },
+    { border: "rgb(96, 21, 226)", bgColor: "rgb(96, 21, 226, 0.8)" },
+    { border: "rgb(24, 39, 208)", bgColor: "rgb(24, 39, 208, 0.8)" },
+    { border: "rgb(107, 33, 168)", bgColor: "rgb(107, 33, 168, 0.8)" },
+  ];
 }
