@@ -16,7 +16,7 @@ interface DashboardContextProviderProps {
 }
 
 interface Acquirers {
-  acquirer: string;
+  document: string;
   ultimoPagamento: string;
   valorPagar: number;
   valorReceber: number;
