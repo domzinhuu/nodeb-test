@@ -158,36 +158,38 @@ export default function Dashboard() {
           lastPayment={data.ultimoPagamento}
           nextPayment={data.proximo?.date}
         />
-        <div className="grid p-4 md:grid-cols-3 grid-cols-1 gap-4">
+        <div className="grid p-4 md:grid-cols-3 grid-cols-1 gap-4 ">
           <DataTable data={data} />
           {consolidateData.length && (
-            <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] flex flex-col gap-4 p-8 justify-start items-center border rounded-lg bg-white box-border overflow-y-scroll">
-              <div className="w-full">
-                <Typography
-                  variant="h6"
-                  className="p-2 rounded-lg bg-slate-100 flex justify-center"
-                >
-                  Credenciadoras
-                </Typography>
-                <DoughnutChart data={acquirerData} />
-              </div>
-              <div className="w-full">
-                <Typography
-                  variant="h6"
-                  className="p-2 rounded-lg bg-slate-100 flex justify-center"
-                >
-                  Bandeiras
-                </Typography>
-                <DoughnutChart data={paymentMethodData} />
-              </div>
-              <div className="w-full">
-                <Typography
-                  variant="h6"
-                  className="p-2 rounded-lg bg-slate-100 flex justify-center"
-                >
-                  Valor (Comprometido / Livre)
-                </Typography>
-                <DoughnutChart data={valueData} />
+            <div className="chart-slider">
+              <div className="slides w-full col-span-1 relative lg:h-[70vh] h-[50vh] flex flex-col gap-4 p-8 justify-start items-center border rounded-lg bg-white box-border overflow-y-scroll">
+                <div className="w-full chart-slide py-4">
+                  <Typography
+                    variant="h6"
+                    className="p-2 rounded-lg bg-slate-100 flex justify-center"
+                  >
+                    Credenciadoras
+                  </Typography>
+                  <DoughnutChart data={acquirerData} />
+                </div>
+                <div className="w-full chart-slide py-4">
+                  <Typography
+                    variant="h6"
+                    className="p-2 rounded-lg bg-slate-100 flex justify-center"
+                  >
+                    Bandeiras
+                  </Typography>
+                  <DoughnutChart data={paymentMethodData} />
+                </div>
+                <div className="w-full chart-slide py-4">
+                  <Typography
+                    variant="h6"
+                    className="p-2 rounded-lg bg-slate-100 flex justify-center"
+                  >
+                    Valor (Comprometido / Livre)
+                  </Typography>
+                  <DoughnutChart data={valueData} />
+                </div>
               </div>
             </div>
           )}
