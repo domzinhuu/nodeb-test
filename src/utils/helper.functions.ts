@@ -38,7 +38,11 @@ export function getChartColors() {
     { border: "rgb(220, 12, 209)", bgColor: "rgb(220, 12, 209, 0.8)" },
     { border: "rgb(142, 2, 98)", bgColor: "rgb(142, 2, 98, 0.8)" },
     { border: "rgb(96, 21, 226)", bgColor: "rgb(96, 21, 226, 0.8)" },
-    { border: "rgb(24, 39, 208)", bgColor: "rgb(24, 39, 208, 0.8)" },
     { border: "rgb(107, 33, 168)", bgColor: "rgb(107, 33, 168, 0.8)" },
+    { border: "rgb(153, 102, 255)", bgColor: "rgb(153, 102, 255, 0.8)" },
+    { border: "rgb(122, 82, 204)", bgColor: "rgb(122, 82, 204, 0.8)" },
+    { border: "rgb(92, 61, 153)", bgColor: "rgb(92, 61, 153, 0.8)" },
+    { border: "rgb(61, 41, 102)", bgColor: "rgb(61, 41, 102, 0.8)" },
+    { border: "rgb(31, 20, 51)", bgColor: "rgb(31, 20, 51, 0.8)" },
   ];
 }

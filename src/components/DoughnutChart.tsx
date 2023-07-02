@@ -26,7 +26,6 @@ interface DoughnutChartProps {
 export function DoughnutChart({
   data = {} as DoughnutData,
 }: DoughnutChartProps) {
-  console.log(data);
   return (
     <Doughnut
       style={{ width: "width:100%", height: "100%" }}

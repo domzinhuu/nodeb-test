@@ -3,7 +3,6 @@ import {
   ConsolidateData,
   DashboardContext,
 } from "@/app/context/DashboardContext";
-import BarChart from "@/components/BarChart";
 import DataTable from "@/components/DataTable";
 import { DoughnutChart } from "@/components/DoughnutChart";
 import TopCard from "@/components/TopCard";
@@ -53,7 +52,7 @@ function getChartDataByAcquirer(consolidateData: ConsolidateData[] = []) {
           (item, index) => colorChart[index].bgColor
         ),
         borderColor: sumAcqurierTotal.map(
-          (item, index) => colorChart[index].bgColor
+          (item, index) => colorChart[index].border
         ),
         borderWidth: 1,
       },
@@ -63,6 +62,80 @@ function getChartDataByAcquirer(consolidateData: ConsolidateData[] = []) {
   return acqData;
 }
 
+function getChartDataByPaymentMethod(consolidateData: ConsolidateData[] = []) {
+  const colorChart = getChartColors();
+  let brandList: any = []; // armazena todos as bandeiras de uma lista de comercio
+
+  if (consolidateData.length > 0) {
+    brandList = consolidateData.reduce((acc: any, current: any) => {
+      let brandData = current.acquirers.reduce(
+        (accBrand: any, currentBrand: any) => {
+          let newData = accBrand.bandeiras ? accBrand.bandeiras : accBrand;
+          newData = [...newData, ...currentBrand.bandeiras];
+          return newData;
+        }
+      );
+
+      let newReduceValue = acc.acquirers ? brandData : [...acc, ...brandData];
+      return newReduceValue;
+    });
+  }
+
+  // agrupa as bandeiras por documento para não ter repetidos na lista
+  const groupByBrand = values(groupBy(brandList, "name"));
+
+  // soma o valor de cada bandeira agrupada no groupByBrand
+  let sumBrandTotal = groupByBrand.map((brand: any) => {
+    return { name: brand[0].name, value: sumBy(brand, "value") };
+  });
+
+  // monta o dataset para enviar ao chart setando cores dinamicamente
+  let brandDataSet = {
+    labels: sumBrandTotal.map((item) => item.name),
+    datasets: [
+      {
+        label: "# valor total",
+        data: sumBrandTotal.map((item) => item.value),
+        backgroundColor: sumBrandTotal.map(
+          (item, index) => colorChart[index]?.bgColor
+        ),
+        borderColor: sumBrandTotal.map(
+          (item, index) => colorChart[index]?.border
+        ),
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  return brandDataSet;
+}
+
+function getChartDataByValue(consolidateData: ConsolidateData[] = []) {
+  const colorChart = getChartColors();
+
+  if (consolidateData.length > 0) {
+    const sumValueToPay = sumBy(consolidateData, "totalPayValue");
+    const sumValueToReceive = sumBy(consolidateData, "totalReceiveValue");
+
+    let orgData: any = {
+      labels: ["Valor a Receber", "Valor Comprometido"],
+      datasets: [
+        {
+          label: "# valor",
+          data: [sumValueToReceive, sumValueToPay],
+          backgroundColor: [colorChart[6].bgColor, colorChart[3].bgColor],
+          borderColor: [colorChart[6].border, colorChart[3].border],
+          borderWidth: 1,
+        },
+      ],
+    };
+
+    return orgData;
+  }
+
+  return {};
+}
+
 export default function Dashboard() {
   const { consolidateData, data } = useContext(DashboardContext);
   const acquirerData = useMemo(
@@ -70,58 +143,13 @@ export default function Dashboard() {
     [consolidateData]
   );
 
-  const paymentMethodData = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
-  const valueData = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
+  const paymentMethodData = useMemo(
+    () => getChartDataByPaymentMethod(consolidateData),
+    [consolidateData]
+  );
+
+  const valueData = getChartDataByValue(consolidateData);
+
   return (
     data && (
       <>
@@ -132,36 +160,37 @@ export default function Dashboard() {
         />
         <div className="grid p-4 md:grid-cols-3 grid-cols-1 gap-4">
           <DataTable data={data} />
-
-          <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] flex flex-col gap-4 p-8 justify-start items-center border rounded-lg bg-white box-border overflow-y-scroll">
-            <div className="w-full">
-              <Typography
-                variant="h6"
-                className="p-2 rounded-lg bg-slate-100 flex justify-center"
-              >
-                Credenciadoras
-              </Typography>
-              <DoughnutChart data={acquirerData} />
+          {consolidateData.length && (
+            <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] flex flex-col gap-4 p-8 justify-start items-center border rounded-lg bg-white box-border overflow-y-scroll">
+              <div className="w-full">
+                <Typography
+                  variant="h6"
+                  className="p-2 rounded-lg bg-slate-100 flex justify-center"
+                >
+                  Credenciadoras
+                </Typography>
+                <DoughnutChart data={acquirerData} />
+              </div>
+              <div className="w-full">
+                <Typography
+                  variant="h6"
+                  className="p-2 rounded-lg bg-slate-100 flex justify-center"
+                >
+                  Bandeiras
+                </Typography>
+                <DoughnutChart data={paymentMethodData} />
+              </div>
+              <div className="w-full">
+                <Typography
+                  variant="h6"
+                  className="p-2 rounded-lg bg-slate-100 flex justify-center"
+                >
+                  Valor (Comprometido / Livre)
+                </Typography>
+                <DoughnutChart data={valueData} />
+              </div>
             </div>
-            <div className="w-full">
-              <Typography
-                variant="h6"
-                className="p-2 rounded-lg bg-slate-100 flex justify-center"
-              >
-                Bandeiras
-              </Typography>
-              <DoughnutChart data={paymentMethodData} />
-            </div>
-            <div className="w-full">
-              <Typography
-                variant="h6"
-                className="p-2 rounded-lg bg-slate-100 flex justify-center"
-              >
-                Valor (Comprometido / Livre)
-              </Typography>
-              <DoughnutChart data={valueData} />
-            </div>
-          </div>
+          )}
         </div>
       </>
     )
