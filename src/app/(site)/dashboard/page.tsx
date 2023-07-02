@@ -7,9 +7,10 @@ import DataTable from "@/components/DataTable";
 import { DoughnutChart } from "@/components/DoughnutChart";
 import TopCard from "@/components/TopCard";
 import { Typography } from "@mui/material";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { values, groupBy, sumBy } from "lodash";
 import { getChartColors } from "@/utils/helper.functions";
+import { FilterDialog } from "@/components/FilterDialog";
 
 function getChartDataByAcquirer(consolidateData: ConsolidateData[] = []) {
   const colorChart = getChartColors();
@@ -138,6 +139,8 @@ function getChartDataByValue(consolidateData: ConsolidateData[] = []) {
 
 export default function Dashboard() {
   const { consolidateData, data } = useContext(DashboardContext);
+  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
+
   const acquirerData = useMemo(
     () => getChartDataByAcquirer(consolidateData),
     [consolidateData]
@@ -150,6 +153,10 @@ export default function Dashboard() {
 
   const valueData = getChartDataByValue(consolidateData);
 
+  function handleToggleFilterDialog() {
+    setFilterDialogOpen((prev) => !prev);
+  }
+
   return (
     data && (
       <>
@@ -159,7 +166,11 @@ export default function Dashboard() {
           nextPayment={data.proximo?.date}
         />
         <div className="grid p-4 md:grid-cols-3 grid-cols-1 gap-4 ">
-          <DataTable data={data} />
+          <DataTable
+            data={data}
+            showFilterButton={true}
+            onFilterOpen={handleToggleFilterDialog}
+          />
           {consolidateData.length && (
             <div className="chart-slider">
               <div className="slides w-full col-span-1 relative lg:h-[70vh] h-[50vh] flex flex-col gap-4 p-8 justify-start items-center border rounded-lg bg-white box-border overflow-y-scroll">
@@ -194,6 +205,11 @@ export default function Dashboard() {
             </div>
           )}
         </div>
+
+        <FilterDialog
+          isOpen={filterDialogOpen}
+          onclose={handleToggleFilterDialog}
+        />
       </>
     )
   );

@@ -16,13 +16,15 @@ import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import * as React from "react";
 import { formatToCurrency } from "@/utils/helper.functions";
 import { DashboardContext } from "@/app/context/DashboardContext";
-import { Info } from "phosphor-react";
+import { Funnel, Info } from "phosphor-react";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { NodebTooltip } from "./Tooltip";
 
 interface DataTableProps {
   data: any;
+  showFilterButton?: boolean;
+  onFilterOpen?: () => void;
 }
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -48,7 +50,11 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-export default function DataTable({ data }: DataTableProps) {
+export default function DataTable({
+  data,
+  showFilterButton = false,
+  onFilterOpen,
+}: DataTableProps) {
   const [expanded, setExpanded] = React.useState(false);
   const { consolidateData } = React.useContext(DashboardContext);
   const handleChange =
@@ -60,49 +66,61 @@ export default function DataTable({ data }: DataTableProps) {
   return (
     <div className="w-full md:col-span-2 relative lg:h-[70vh] h-[50vh] m-auto border rounded-lg bg-white overflow-y-scroll">
       <div className="p-4">
-        <p className="text-2xl font-bold w-full flex items-center gap-2">
-          Comércios
-          <NodebTooltip
-            content={
-              <React.Fragment>
-                <Typography color="inherit">INFORMAÇÃO</Typography>
-                <u>Visão dos valores separados por credenciador, sendo:</u>
-                <ul>
-                  <li>
-                    {" "}
-                    <b>- Último pagamento agendado:</b>{" "}
-                    <em>A data do pagamento futuro mais distante</em>
-                  </li>
-                  <li>
-                    <b>- Valor a comprometido:</b>{" "}
-                    <em>
-                      Montante descontado da sua agenda que foi utilizado em
-                      alguma negociação (ex: antecipação, cessão de garantia,
-                      etc...)
-                    </em>
-                  </li>
-                  <li>
-                    <b>- Valor a receber:</b>{" "}
-                    <em>
-                      Valor líquido que você irá receber ou que poderá usar em
-                      alguma negociação
-                    </em>
-                  </li>
-                  <li>
-                    <b>- Valor total:</b>{" "}
-                    <em>
-                      montante referente a todo valor transacionado que compõe
-                      sua agenda
-                    </em>
-                    (valor comprometido + valor a receber)
-                  </li>
-                </ul>
-              </React.Fragment>
-            }
-          >
-            <Info size={24} className="text-purple-700 cursor-pointer" />
-          </NodebTooltip>
-        </p>
+        <div className="text-2xl font-bold w-full flex justify-between">
+          <div className="flex items-center gap-2">
+            <span>Comércios</span>
+            <NodebTooltip
+              content={
+                <React.Fragment>
+                  <Typography color="inherit">INFORMAÇÃO</Typography>
+                  <u>Visão dos valores separados por credenciador, sendo:</u>
+                  <ul>
+                    <li>
+                      {" "}
+                      <b>- Último pagamento agendado:</b>{" "}
+                      <em>A data do pagamento futuro mais distante</em>
+                    </li>
+                    <li>
+                      <b>- Valor a comprometido:</b>{" "}
+                      <em>
+                        Montante descontado da sua agenda que foi utilizado em
+                        alguma negociação (ex: antecipação, cessão de garantia,
+                        etc...)
+                      </em>
+                    </li>
+                    <li>
+                      <b>- Valor a receber:</b>{" "}
+                      <em>
+                        Valor líquido que você irá receber ou que poderá usar em
+                        alguma negociação
+                      </em>
+                    </li>
+                    <li>
+                      <b>- Valor total:</b>{" "}
+                      <em>
+                        montante referente a todo valor transacionado que compõe
+                        sua agenda
+                      </em>
+                      (valor comprometido + valor a receber)
+                    </li>
+                  </ul>
+                </React.Fragment>
+              }
+            >
+              <Info size={24} className="text-purple-700 cursor-pointer" />
+            </NodebTooltip>
+          </div>
+
+          {showFilterButton && (
+            <button
+              onClick={onFilterOpen}
+              title="Abrir filtros"
+              className="text-sm underline flex gap-2 items-center hover:bg-slate-100 font-bold rounded-lg p-2 transition-all duration-100"
+            >
+              <Funnel size={18} />
+            </button>
+          )}
+        </div>
       </div>
       {consolidateData?.map((row: any) => (
         <Accordion
