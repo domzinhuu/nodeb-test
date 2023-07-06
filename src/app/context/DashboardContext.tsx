@@ -1,12 +1,14 @@
 "use client";
 
-import { DashboardService } from "@/services/dashboard";
+import { DashboardDataFilter, DashboardService } from "@/services/dashboard";
 import { buildResponseData } from "@/utils/helper.functions";
 import React, { ReactNode, useEffect, useState } from "react";
 
 interface DashboardContextData {
   data: any;
   consolidateData: ConsolidateData[];
+  isLoading: boolean;
+  fetchDashboardData: (filter?: DashboardDataFilter) => Promise<void>;
 }
 
 export const DashboardContext = React.createContext({} as DashboardContextData);
@@ -35,14 +37,16 @@ export function DashboardContextProvider({
   children,
 }: DashboardContextProviderProps) {
   const [data, setData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const [consolidate, setConsolidate] = useState<ConsolidateData[]>([]);
 
-  async function getDashboardData() {
-    const response = await DashboardService.fetchDashboardData();
+  async function getDashboardData(filter?: DashboardDataFilter) {
+    setIsLoading(true);
+    const response = await DashboardService.fetchDashboardData(filter);
     const consolidateData = buildResponseData(response);
-
     setData(response);
     setConsolidate(consolidateData);
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -50,7 +54,14 @@ export function DashboardContextProvider({
   }, []);
 
   return (
-    <DashboardContext.Provider value={{ data, consolidateData: consolidate }}>
+    <DashboardContext.Provider
+      value={{
+        data,
+        consolidateData: consolidate,
+        isLoading,
+        fetchDashboardData: getDashboardData,
+      }}
+    >
       {children}
     </DashboardContext.Provider>
   );

@@ -208,7 +208,7 @@ export default function Dashboard() {
 
         <FilterDialog
           isOpen={filterDialogOpen}
-          onclose={handleToggleFilterDialog}
+          onClose={handleToggleFilterDialog}
         />
       </>
     )

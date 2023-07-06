@@ -1,7 +1,6 @@
-import { formatToCurrency } from "@/utils/helper.functions";
+import { formatDate, formatToCurrency } from "@/utils/helper.functions";
 import { Info } from "phosphor-react";
 import { BiCalendarExclamation, BiTrendingUp } from "react-icons/bi";
-import * as Tooltip from "@radix-ui/react-tooltip";
 import { NodebTooltip } from "./Tooltip";
 import React from "react";
 
@@ -26,8 +25,9 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
                     <React.Fragment>
                       <p>
                         Aqui é a soma do valor que você tem a receber em todas
-                        as credenciadoras até <b>[DATA_AQUI]</b> que é a data do
-                        último pagamento agendado.
+                        as credenciadoras até{" "}
+                        <b>{formatDate(new Date(lastPayment))}</b> que é a data
+                        do último pagamento agendado.
                       </p>
                     </React.Fragment>
                   }
@@ -40,7 +40,10 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
             )}
           </span>
           <span className="text-gray-600">
-            Valor total a receber até: <strong>22/11/2042</strong>
+            Valor total a receber até:{" "}
+            <strong>
+              {lastPayment ? formatDate(new Date(lastPayment)) : ""}
+            </strong>
           </span>
         </div>
         <span className="bg-green-200 w-20 flex justify-center items-center p-2 rounded-lg">
