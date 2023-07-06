@@ -5,7 +5,19 @@ const formatter = new Intl.NumberFormat("pt-BR", {
   currency: "BRL",
 });
 
-export const formatToCurrency = (value: number) => formatter.format(value);
+const dateFormat = new Intl.DateTimeFormat("pt-BR", {
+  
+});
+
+export const formatDate = (date: Date): string => {
+  if (date) {
+    return dateFormat.format(date);
+  }
+
+  return "";
+};
+export const formatToCurrency = (value: number): string =>
+  formatter.format(value);
 
 export function buildResponseData(mockData: any) {
   const consolidate = mockData.organizations.map((org: any) => {

@@ -1,19 +1,98 @@
+import { DashboardContext } from "@/app/context/DashboardContext";
 import { Dialog, DialogContent, DialogProps, DialogTitle } from "@mui/material";
-import { X } from "phosphor-react";
-import React, { useState } from "react";
+import { DateTime } from "luxon";
+import { MagnifyingGlass, Spinner, X } from "phosphor-react";
+import React, {
+  FormEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface FilterDialogProps {
-  onclose: () => void;
+  onClose: () => void;
   isOpen: boolean;
 }
 
-export function FilterDialog({ onclose, isOpen }: FilterDialogProps) {
+enum Period {
+  SEVEN = "7d",
+  MONTH = "30d",
+  QUARTER = "90d",
+  CUSTOM = "custom",
+}
+interface PeriodRange {
+  dataInicio: string;
+  dataFim: string;
+}
+const getPeriodInDate = (period: string): PeriodRange => {
+  const dateRange: PeriodRange = {
+    dataInicio: "",
+    dataFim: "",
+  };
+
+  switch (period) {
+    case Period.SEVEN:
+      dateRange.dataInicio = DateTime.now().toISODate() || "";
+      dateRange.dataFim = DateTime.now().plus({ days: 7 }).toISODate() || "";
+      break;
+    case Period.MONTH:
+      dateRange.dataInicio = DateTime.now().toISODate() || "";
+      dateRange.dataFim = DateTime.now().plus({ months: 1 }).toISODate() || "";
+      break;
+    case Period.QUARTER:
+      dateRange.dataInicio = DateTime.now().toISODate() || "";
+      dateRange.dataFim = DateTime.now().plus({ months: 3 }).toISODate() || "";
+      break;
+  }
+
+  return dateRange;
+};
+
+export function FilterDialog({ onClose: onclose, isOpen }: FilterDialogProps) {
   const [fullWidth, setFullWidth] = useState(true);
   const [maxWidth, setMaxWidth] = useState<DialogProps["maxWidth"]>("sm");
   const [filterPeriod, setFilterPeriod] = useState("7d");
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
+  const [range, setRange] = useState({} as PeriodRange);
+  const { fetchDashboardData, isLoading } = useContext(DashboardContext);
+
+  useEffect(() => {
+    if (filterPeriod === Period.CUSTOM) {
+      const rg: PeriodRange = {
+        dataInicio: DateTime.fromISO(dataInicio).toISODate() || "",
+        dataFim: DateTime.fromISO(dataFim).toISODate() || "",
+      };
+
+      setRange(() => rg);
+    } else {
+      setRange(() => getPeriodInDate(filterPeriod));
+    }
+  }, [filterPeriod, dataInicio, dataFim]);
 
   function handleFilterChange(selectedValue: string) {
+    if (selectedValue === Period.CUSTOM) {
+      setDataInicio("");
+      setDataFim("");
+    }
     setFilterPeriod(selectedValue);
+  }
+
+  function handleChangeDataInicio(value: string) {
+    setDataInicio(value);
+  }
+
+  function handleChangeDataFim(value: string) {
+    setDataFim(value);
+  }
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    await fetchDashboardData({
+      ...range,
+    });
+    onclose();
   }
 
   const showCustomInputs = filterPeriod === "custom";
@@ -26,7 +105,7 @@ export function FilterDialog({ onclose, isOpen }: FilterDialogProps) {
         </button>
       </DialogTitle>
       <DialogContent>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="flex items-center gap-4">
             <label htmlFor="period">Período: </label>
             <select
@@ -44,27 +123,43 @@ export function FilterDialog({ onclose, isOpen }: FilterDialogProps) {
 
           {showCustomInputs && (
             <div className="flex items-center gap-4 py-4">
-              <label>Custom: </label>
+              <label>Selecione: </label>
               <div>
-                <label htmlFor="startAt">De: </label>
+                <label htmlFor="dataInicio">De: </label>
                 <input
                   className="bg-slate-100 rounded-lg p-2 outline-none"
                   type="date"
-                  name="startAt"
-                  id="startAt"
+                  name="dataInicio"
+                  value={dataInicio}
+                  onChange={(e) => handleChangeDataInicio(e.target.value)}
+                  id="dataInicio"
                 />
               </div>
               <div>
-                <label htmlFor="endAt">Até: </label>
+                <label htmlFor="dataFim">Até: </label>
                 <input
                   className="bg-slate-100 rounded-lg p-2 outline-none"
                   type="date"
-                  name="endAt"
-                  id="endAt"
+                  name="dataFim"
+                  value={dataFim}
+                  onChange={(e) => handleChangeDataFim(e.target.value)}
+                  id="dataFim"
                 />
               </div>
             </div>
           )}
+          <div className="flex justify-end pt-4">
+            <button
+              className="flex items-center gap-2 bg-purple-700 text-white rounded-lg p-2"
+              type="submit"
+            >
+              {isLoading && (
+                <Spinner className="animate-spin duration-200" size={18} />
+              )}
+              {!isLoading && <MagnifyingGlass size={18} />}
+              Pesquisar
+            </button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>
