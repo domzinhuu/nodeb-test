@@ -64,11 +64,11 @@ export default function DataTable({
     };
 
   return (
-    <div className="w-full md:col-span-2 relative lg:h-[70vh] h-[50vh] m-auto border rounded-lg bg-white overflow-y-scroll">
-      <div className="p-4">
-        <div className="text-2xl font-bold w-full flex justify-between">
+    <div className="md:col-span-2 bg-white">
+      <div className="py-2 px-4 bg-slate-50 rounded-lg rounded-b-none border-b border-b-slate-100">
+        <div className="font-bold w-full flex justify-between">
           <div className="flex items-center gap-2">
-            <span>Comércios</span>
+            <Typography variant="h6">Comércios</Typography>
             <NodebTooltip
               content={
                 <React.Fragment>
@@ -117,116 +117,120 @@ export default function DataTable({
               title="Abrir filtros"
               className="text-sm underline flex gap-2 items-center hover:bg-slate-100 font-bold rounded-lg p-2 transition-all duration-100"
             >
-              <Funnel size={18} />
+              <Funnel size={20} />
             </button>
           )}
         </div>
       </div>
-      {consolidateData?.map((row: any) => (
-        <Accordion
-          className="hover:bg-slate-50"
-          sx={{
-            backgroundColor: `${
-              expanded === row.document && "rgb(249 250 251)"
-            }`,
-          }}
-          key={row.document}
-          expanded={expanded === row.document}
-          onChange={handleChange(row.document)}
-        >
-          <AccordionSummary
-            className="w-full"
-            expandIcon={expanded ? <MdExpandLess /> : <MdExpandMore />}
-            aria-controls="panel1bh-content"
-            id="panel1bh-header"
+      <div className="w-full relative lg:h-[65vh] h-[50vh] m-auto border rounded-lg bg-white overflow-y-scroll mt-4">
+        {consolidateData?.map((row: any) => (
+          <Accordion
+            className="hover:bg-slate-50"
+            sx={{
+              backgroundColor: `${
+                expanded === row.document && "rgb(249 250 251)"
+              }`,
+            }}
+            key={row.document}
+            expanded={expanded === row.document}
+            onChange={handleChange(row.document)}
           >
-            <div className="flex xl:flex-row w-full justify-between flex-wrap flex-col py-4">
-              <Typography className="flex-shrink-0">
-                {row.document} - Nome do comercio LTDA.
-              </Typography>
+            <AccordionSummary
+              className="w-full"
+              expandIcon={expanded ? <MdExpandLess /> : <MdExpandMore />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <div className="flex xl:flex-row w-full justify-between flex-wrap flex-col py-4">
+                <Typography className="flex-shrink-0">
+                  {row.document} - Nome do comercio LTDA.
+                </Typography>
 
-              <div className="flex-1 flex lg:flex-row lg:pt-0 pt-4 flex-col lg:justify-start">
-                <Typography className=" xl:w-[30%] xl:text-right">
-                  <span className="block">Total a pagar:</span>
-                  <b className="text-red-500">
-                    - {formatToCurrency(row.totalPayValue)}
-                  </b>
-                </Typography>
-                <Typography className="xl:w-[30%] xl:text-right">
-                  <span className="block">Total a receber:</span>
-                  <b>{formatToCurrency(row.totalReceiveValue)}</b>
-                </Typography>
-                <Typography className="xl:w-[30%] xl:text-right">
-                  <span className="block">Valor total:</span>
-                  <b>{formatToCurrency(row.totalValue)}</b>
-                </Typography>
+                <div className="flex-1 flex lg:flex-row lg:pt-0 pt-4 flex-col lg:justify-start">
+                  <Typography className=" xl:w-[30%] xl:text-right">
+                    <span className="block">Total a pagar:</span>
+                    <b className="text-red-500">
+                      - {formatToCurrency(row.totalPayValue)}
+                    </b>
+                  </Typography>
+                  <Typography className="xl:w-[30%] xl:text-right">
+                    <span className="block">Total a receber:</span>
+                    <b>{formatToCurrency(row.totalReceiveValue)}</b>
+                  </Typography>
+                  <Typography className="xl:w-[30%] xl:text-right">
+                    <span className="block">Valor total:</span>
+                    <b>{formatToCurrency(row.totalValue)}</b>
+                  </Typography>
+                </div>
               </div>
-            </div>
-          </AccordionSummary>
-          <AccordionDetails>
-            <TableContainer component={Paper}>
-              <Table aria-label="a dense table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell className="font-bold">Adquirente</TableCell>
-                    <TableCell className="font-bold" align="right">
-                      <Typography variant="body1">
-                        Último Pagamento agendado
-                      </Typography>
-                    </TableCell>
-                    <TableCell className="font-bold" align="right">
-                      <Typography variant="body1">
-                        Valor comprometido
-                      </Typography>
-                    </TableCell>
-                    <TableCell className="font-bold" align="right">
-                      <Typography variant="body1">Valor a receber</Typography>
-                    </TableCell>
-                    <TableCell className="font-bold" align="right">
-                      <Typography variant="body1">Valor total</Typography>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.acquirers.map((acquirer: any) => (
-                    <TableRow
-                      key={acquirer.document}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
+            </AccordionSummary>
+            <AccordionDetails>
+              <TableContainer component={Paper}>
+                <Table aria-label="a dense table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell className="font-bold">Adquirente</TableCell>
+                      <TableCell className="font-bold" align="right">
                         <Typography variant="body1">
-                          {" "}
-                          {acquirer.document} - Nome Adquirente
+                          Último Pagamento agendado
                         </Typography>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell className="font-bold" align="right">
                         <Typography variant="body1">
-                          {acquirer.ultimoPagamento}
+                          Valor comprometido
                         </Typography>
                       </TableCell>
-                      <TableCell align="right">
-                        <Typography variant="body1" className="text-red-500">
-                          - {formatToCurrency(acquirer.valorPagar)}
-                        </Typography>
+                      <TableCell className="font-bold" align="right">
+                        <Typography variant="body1">Valor a receber</Typography>
                       </TableCell>
-                      <TableCell align="right">
-                        <Typography variant="body1">
-                          {formatToCurrency(acquirer.valorReceber)}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography variant="body1">
-                          {formatToCurrency(acquirer.valorTotal)}
-                        </Typography>
+                      <TableCell className="font-bold" align="right">
+                        <Typography variant="body1">Valor total</Typography>
                       </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+                  </TableHead>
+                  <TableBody>
+                    {row.acquirers.map((acquirer: any) => (
+                      <TableRow
+                        key={acquirer.document}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          <Typography variant="body1">
+                            {" "}
+                            {acquirer.document} - Nome Adquirente
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Typography variant="body1">
+                            {acquirer.ultimoPagamento}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Typography variant="body1" className="text-red-500">
+                            - {formatToCurrency(acquirer.valorPagar)}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Typography variant="body1">
+                            {formatToCurrency(acquirer.valorReceber)}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Typography variant="body1">
+                            {formatToCurrency(acquirer.valorTotal)}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </div>
     </div>
   );
 }
