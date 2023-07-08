@@ -9,36 +9,22 @@ import TopCard from "@/components/TopCard";
 import { Typography } from "@mui/material";
 import { useContext, useMemo, useState } from "react";
 import { values, groupBy, sumBy } from "lodash";
-import { getChartColors } from "@/utils/helper.functions";
+import {
+  consolidateDataReduceToAcquirersArray,
+  consolidateDataReduceToBrandsArray,
+  getChartColors,
+} from "@/utils/helper.functions";
 import { FilterDialog } from "@/components/FilterDialog";
-import { LegendItem } from "chart.js";
-import { Legend } from "chart.js/dist/plugins/plugin.legend";
 import { Funnel } from "phosphor-react";
 import { FilterChartDialog } from "@/components/FilterChartDialog";
 
 function getChartDataByAcquirer(consolidateData: ConsolidateData[] = []) {
   const colorChart = getChartColors();
-  let acquirerList: any = []; // armazena todos os acquirers de uma lista de comercio
 
-  if (consolidateData.length > 0) {
-    acquirerList = consolidateData.reduce((acc: any, current: any) => {
-      const acqData = current.acquirers.map((el: any) => ({
-        document: el.document,
-        valorTotal: el.valorTotal,
-      }));
+  // armazena todos os acquirers de uma lista de comercio
+  let acquirerList = consolidateDataReduceToAcquirersArray(consolidateData);
 
-      let newReduceValue = acc.acquirers
-        ? acc.acquirers.map((el: any) => ({
-            document: el.document,
-            valorTotal: el.valorTotal,
-          }))
-        : acc;
-      newReduceValue = [...newReduceValue, ...acqData];
-      return newReduceValue;
-    });
-  }
-
-  // agrupa os acquirer por documento para não ter repetidos na lista
+  // agrupa os acquirer por documento para não ter repetidos na lista e retorna como um array e não como objeto
   const groupByAqcquirer = values(groupBy(acquirerList, "document"));
 
   // soma o valorTotal de cada acquirer agrupado no groupByAcquirer
@@ -69,29 +55,19 @@ function getChartDataByAcquirer(consolidateData: ConsolidateData[] = []) {
 
 function getChartDataByPaymentMethod(consolidateData: ConsolidateData[] = []) {
   const colorChart = getChartColors();
-  let brandList: any = []; // armazena todos as bandeiras de uma lista de comercio
 
-  if (consolidateData.length > 0) {
-    brandList = consolidateData.reduce((acc: any, current: any) => {
-      let brandData = current.acquirers.reduce(
-        (accBrand: any, currentBrand: any) => {
-          let newData = accBrand.bandeiras ? accBrand.bandeiras : accBrand;
-          newData = [...newData, ...currentBrand.bandeiras];
-          return newData;
-        }
-      );
+  // armazena todos as bandeiras de uma lista de comercio
+  let brandList = consolidateDataReduceToBrandsArray(consolidateData);
 
-      let newReduceValue = acc.acquirers ? brandData : [...acc, ...brandData];
-      return newReduceValue;
-    });
-  }
-
-  // agrupa as bandeiras por documento para não ter repetidos na lista
+  // agrupa as bandeiras por documento para não ter repetidos na lista e retorna como array e não como objeto
   const groupByBrand = values(groupBy(brandList, "name"));
 
-  // soma o valor de cada bandeira agrupada no groupByBrand
+  // soma o valor total de cada bandeira agrupada no groupByBrand
   let sumBrandTotal = groupByBrand.map((brand: any) => {
-    return { name: brand[0].name, value: sumBy(brand, "value") };
+    return {
+      name: brand[0].name,
+      value: sumBy(brand, "valorReceber") - sumBy(brand, "valorPagar"),
+    };
   });
 
   // monta o dataset para enviar ao chart setando cores dinamicamente
@@ -142,21 +118,25 @@ function getChartDataByValue(consolidateData: ConsolidateData[] = []) {
 }
 
 export default function Dashboard() {
-  const { consolidateData, data } = useContext(DashboardContext);
+  const { consolidateData, data, chartConsolidate } =
+    useContext(DashboardContext);
   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
   const [filterChartDialogOpen, setFilterChartDialogOpen] = useState(false);
 
   const acquirerData = useMemo(
-    () => getChartDataByAcquirer(consolidateData),
-    [consolidateData]
+    () => getChartDataByAcquirer(chartConsolidate),
+    [chartConsolidate]
   );
 
   const paymentMethodData = useMemo(
-    () => getChartDataByPaymentMethod(consolidateData),
-    [consolidateData]
+    () => getChartDataByPaymentMethod(chartConsolidate),
+    [chartConsolidate]
   );
 
-  const valueData = getChartDataByValue(consolidateData);
+  const valueData = useMemo(
+    () => getChartDataByValue(chartConsolidate),
+    [chartConsolidate]
+  );
 
   function handleToggleFilterDialog() {
     setFilterDialogOpen((prev) => !prev);
@@ -164,14 +144,6 @@ export default function Dashboard() {
 
   function handleToggleFilterChartDialog() {
     setFilterChartDialogOpen((prev) => !prev);
-  }
-
-  function handleClickChartLegend(
-    evn: any,
-    legendItem: LegendItem,
-    legend: Legend
-  ) {
-    console.log(legendItem.index);
   }
 
   return (
@@ -211,10 +183,7 @@ export default function Dashboard() {
                     >
                       Credenciadoras
                     </Typography>
-                    <DoughnutChart
-                      onLegendClick={handleClickChartLegend}
-                      data={acquirerData}
-                    />
+                    <DoughnutChart data={acquirerData} />
                   </div>
                   <div className="w-full chart-slide py-4">
                     <Typography
@@ -223,10 +192,7 @@ export default function Dashboard() {
                     >
                       Bandeiras
                     </Typography>
-                    <DoughnutChart
-                      onLegendClick={handleClickChartLegend}
-                      data={paymentMethodData}
-                    />
+                    <DoughnutChart data={paymentMethodData} />
                   </div>
                   <div className="w-full chart-slide py-4">
                     <Typography
@@ -235,10 +201,7 @@ export default function Dashboard() {
                     >
                       Valor (Comprometido / Livre)
                     </Typography>
-                    <DoughnutChart
-                      onLegendClick={handleClickChartLegend}
-                      data={valueData}
-                    />
+                    <DoughnutChart data={valueData} />
                   </div>
                 </div>
               </div>

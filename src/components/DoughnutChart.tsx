@@ -30,16 +30,10 @@ interface DoughnutData {
 
 interface DoughnutChartProps {
   data: any;
-  onLegendClick: (
-    evt: any,
-    legendItem: LegendItem,
-    legend: PluginLegend
-  ) => void;
 }
 
 export function DoughnutChart({
   data = {} as DoughnutData,
-  onLegendClick,
 }: DoughnutChartProps) {
   return (
     <Doughnut
@@ -53,12 +47,9 @@ export function DoughnutChart({
               const dataArray = context.dataset.data;
               const dataTotal = sum(dataArray);
 
-              return ((value * 100) / dataTotal).toPrecision(2) + "%";
+              return ((value * 100) / dataTotal).toFixed(2) + "%";
             },
           },
-          /* legend: {
-            onClick: onLegendClick,
-          }, */
         },
       }}
       data={data}
