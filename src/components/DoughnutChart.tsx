@@ -10,6 +10,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Doughnut } from "react-chartjs-2";
 import { sum, sumBy } from "lodash";
 import { Legend as PluginLegend } from "chart.js/dist/plugins/plugin.legend";
+import { formatToCurrency } from "@/utils/helper.functions";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -47,7 +48,7 @@ export function DoughnutChart({
               const dataArray = context.dataset.data;
               const dataTotal = sum(dataArray);
 
-              return ((value * 100) / dataTotal).toFixed(2) + "%";
+              return formatToCurrency(dataTotal);
             },
           },
         },
