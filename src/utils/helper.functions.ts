@@ -88,7 +88,7 @@ export function buildResponseData(mockData: any) {
     const acquirers = org.acquirers.map((acquirer: any) => {
       acquirer.valorPagar = sumBy(acquirer.bandeiras, "valorPagar");
       acquirer.valorReceber = sumBy(acquirer.bandeiras, "valorReceber");
-      acquirer.valorTotal = acquirer.valorReceber - acquirer.valorPagar;
+      acquirer.valorTotal = acquirer.valorReceber + acquirer.valorPagar;
       return acquirer;
     });
     const totalPayValue = sumBy(acquirers, "valorPagar");

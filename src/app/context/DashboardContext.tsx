@@ -97,7 +97,7 @@ export function DashboardContextProvider({
     }
 
     if (filter.brands.length) {
-      consolidateFilteredByAcquirers = chartConsolidate.map(
+      consolidateFilteredByAcquirers = consolidateFilteredByAcquirers.map(
         (org: ConsolidateData): ConsolidateData => {
           const filterAcquirers = org.acquirers.map((acq): Acquirers => {
             const filteredBrands = acq.bandeiras.filter((brand: any) =>

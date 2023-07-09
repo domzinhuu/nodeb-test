@@ -66,7 +66,7 @@ function getChartDataByPaymentMethod(consolidateData: ConsolidateData[] = []) {
   let sumBrandTotal = groupByBrand.map((brand: any) => {
     return {
       name: brand[0].name,
-      value: sumBy(brand, "valorReceber") - sumBy(brand, "valorPagar"),
+      value: sumBy(brand, "valorReceber") + sumBy(brand, "valorPagar"),
     };
   });
 
