@@ -8,9 +8,15 @@ interface TopCardProps {
   futureSchedule: number;
   nextPayment: any;
   lastPayment: string;
+  current: any;
 }
 
-function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
+function TopCard({
+  futureSchedule,
+  nextPayment,
+  current,
+  lastPayment,
+}: TopCardProps) {
   return (
     <div className="grid lg:grid-cols-6 gap-4 p-4">
       <div className="lg:col-span-4 col-span-1 flex bg-white justify-between w-full border p-4 rounded-lg h-[106px]">
@@ -25,9 +31,8 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
                     <React.Fragment>
                       <p>
                         Aqui é a soma do valor que você tem a receber em todas
-                        as credenciadoras até{" "}
-                        <b>{formatDate(new Date(lastPayment))}</b> que é a data
-                        do último pagamento agendado.
+                        as credenciadoras até <b>{formatDate(lastPayment)}</b>{" "}
+                        que é a data do último pagamento agendado.
                       </p>
                     </React.Fragment>
                   }
@@ -41,9 +46,7 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
           </span>
           <span className="text-gray-600">
             Valor total a receber até:{" "}
-            <strong>
-              {lastPayment ? formatDate(new Date(lastPayment)) : ""}
-            </strong>
+            <strong>{lastPayment ? formatDate(lastPayment) : ""}</strong>
           </span>
         </div>
         <span className="bg-green-200 w-20 flex justify-center items-center p-2 rounded-lg">
@@ -54,15 +57,20 @@ function TopCard({ futureSchedule, nextPayment, lastPayment }: TopCardProps) {
       </div>
 
       <div className="lg:col-span-2 col-span-1 flex bg-white justify-between w-full border p-4 rounded-lg h-[106px]">
-        <div className="flex flex-col w-full pb-4">
-          <span className="text-2xl font-bold">Pagamentos Previstos</span>
-          <span className="text-gray-600">
-            11/06/2023: <strong>{formatToCurrency(1000)}</strong>
-          </span>
-          <span className="text-gray-600">
-            11/06/2023: <strong>{formatToCurrency(1000)}</strong>
-          </span>
-        </div>
+        {(nextPayment || current) && (
+          <div className="flex flex-col w-full pb-4">
+            <span className="text-2xl font-bold">Pagamentos Previstos</span>
+            <span className="text-gray-600">
+              {formatDate(current?.date)}:{" "}
+              <strong>{formatToCurrency(current?.amount)}</strong>
+            </span>
+            <span className="text-gray-600">
+              {formatDate(nextPayment?.date)}:{" "}
+              <strong>{formatToCurrency(nextPayment?.amount)}</strong>
+            </span>
+          </div>
+        )}
+
         <span className="bg-green-200 w-20 flex justify-center items-center p-2 rounded-lg">
           <span className="text-green-700 text-lg">
             <BiCalendarExclamation size={28} />

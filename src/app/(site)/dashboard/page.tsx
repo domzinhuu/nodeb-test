@@ -152,7 +152,8 @@ export default function Dashboard() {
         <TopCard
           futureSchedule={Number(data.agendaFutura)}
           lastPayment={data.ultimoPagamento}
-          nextPayment={data.proximo?.date}
+          nextPayment={data.proximo}
+          current={data.atual}
         />
         <div className="grid p-4 md:grid-cols-3 grid-cols-1 gap-4 ">
           <DataTable

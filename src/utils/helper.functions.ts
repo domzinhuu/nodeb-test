@@ -1,13 +1,14 @@
 import { ConsolidateData } from "@/app/context/DashboardContext";
 import { groupBy, sumBy } from "lodash";
 
-const dateFormat = new Intl.DateTimeFormat("pt-BR");
+const dateFormat = new Intl.DateTimeFormat("pt-BR", { timeZone: "GMT" });
 const formatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
   currency: "BRL",
 });
 
 function mapAcquirerToNameAndValue(acquirers: any[]) {
+  console.log(acquirers);
   return acquirers.map((el: any) => ({
     document: el.document,
     valorTotal: el.valorTotal,
@@ -37,7 +38,7 @@ export const getAllAcquirerNameFromConsolidateData = (
   consolidate: ConsolidateData[]
 ): Array<string> => {
   const acquirers = consolidateDataReduceToAcquirersArray(consolidate);
-  const grouped = groupBy(acquirers, "document");
+  const grouped = groupBy(acquirers, "name");
 
   return Object.keys(grouped);
 };
@@ -53,12 +54,15 @@ export const consolidateDataReduceToBrandsArray = (
     let brandData = current.acquirers.reduce(
       (accBrand: any, currentBrand: any) => {
         let newData = accBrand.bandeiras ? accBrand.bandeiras : accBrand;
+
         newData = [...newData, ...currentBrand.bandeiras];
         return newData;
       }
     );
 
-    let newReduceValue = brandData.bandeiras ? brandData.bandeiras : [...brandData];
+    let newReduceValue = brandData.bandeiras
+      ? brandData.bandeiras
+      : [...brandData];
     return newReduceValue;
   });
 };
@@ -72,9 +76,10 @@ export const getAllBrandNameFromConsolidateData = (
   return Object.keys(grouped);
 };
 
-export const formatDate = (date: Date): string => {
+export const formatDate = (date: string): string => {
   if (date) {
-    return dateFormat.format(date);
+    const jsDate = new Date(date);
+    return dateFormat.format(jsDate);
   }
 
   return "";
@@ -86,8 +91,8 @@ export const formatToCurrency = (value: number): string =>
 export function buildResponseData(mockData: any) {
   const consolidate = mockData.organizations.map((org: any) => {
     const acquirers = org.acquirers.map((acquirer: any) => {
-      acquirer.valorPagar = sumBy(acquirer.bandeiras, "valorPagar");
-      acquirer.valorReceber = sumBy(acquirer.bandeiras, "valorReceber");
+      acquirer.valorPagar = sumBy(acquirer.bandeiras, "freeAmount");
+      acquirer.valorReceber = sumBy(acquirer.bandeiras, "blockedAmount");
       acquirer.valorTotal = acquirer.valorReceber + acquirer.valorPagar;
       return acquirer;
     });
@@ -104,7 +109,7 @@ export function buildResponseData(mockData: any) {
     };
   });
 
-  return consolidate;
+  return [consolidate[0], consolidate[0]];
 }
 
 export function getChartColors() {

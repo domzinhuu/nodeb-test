@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import * as React from "react";
-import { formatToCurrency } from "@/utils/helper.functions";
+import { formatDate, formatToCurrency } from "@/utils/helper.functions";
 import { DashboardContext } from "@/app/context/DashboardContext";
 import { Funnel, Info } from "phosphor-react";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
@@ -204,7 +204,7 @@ export default function DataTable({
                         </TableCell>
                         <TableCell align="right">
                           <Typography variant="body1">
-                            {acquirer.ultimoPagamento}
+                            {formatDate(acquirer.ultimoPagamento)}
                           </Typography>
                         </TableCell>
                         <TableCell align="right">

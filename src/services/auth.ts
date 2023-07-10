@@ -1,23 +1,15 @@
 import { UserData } from "@/app/context/AuthContext";
 import { api } from "@/lib/axios";
 
-async function login(
-  userName: string,
-  password: string
-): Promise<UserData | null> {
-  const response = await api.get(`/users?email=${userName}`);
-
-  if (!response.data) {
+async function login(userName: string, password: string): Promise<any | null> {
+  const response = await api.post(`/login`, { email: userName, password });
+  if (!response.headers.authorization) {
     return null;
   }
 
-  const user: UserData = response.data[0];
+  const user: UserData = response.data.currentClient;
 
-  if (user.password !== password) {
-    return null;
-  }
-
-  return user;
+  return { user, token: response.headers.authorization };
 }
 
 export const AuthService = {

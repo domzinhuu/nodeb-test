@@ -1,16 +1,19 @@
 "use client";
 
-import { USER_SESSION } from "@/constants/variables";
+import { SESSION_TOKEN, USER_SESSION } from "@/constants/variables";
 import { AuthService } from "@/services/auth";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export interface UserData {
-  id: string;
-  fullName: string;
+  clientId: number;
+  clientPhone: string;
+  cnpj: string;
+  ecAddress: string;
+  ecPhone: string;
   email: string;
-  password: string;
-  roles: string[];
+  reprDoc: string;
+  reprName: string;
 }
 
 interface AuthContextData {
@@ -28,6 +31,7 @@ export const AuthContext = createContext({} as AuthContextData);
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [userLogged, setUserLogged] = useState({} as UserData);
+  const [token, setToken] = useState("");
   const router = useRouter();
 
   async function login(
@@ -36,17 +40,19 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   ): Promise<UserData | null> {
     const logged = await AuthService.login(username, password);
 
-    if (logged) {
+    if (logged.token) {
       setIsLogged(true);
       saveSession(logged);
-      setUserLogged(logged);
+      setUserLogged(logged.user);
+      setToken(logged.token);
       return logged;
     }
     return null;
   }
 
-  function saveSession(userLogged: UserData): void {
-    window.sessionStorage.setItem(USER_SESSION, JSON.stringify(userLogged));
+  function saveSession(userLogged: { user: UserData; token: string }): void {
+    window.sessionStorage.setItem(USER_SESSION, JSON.stringify(userLogged.user));
+    window.sessionStorage.setItem(SESSION_TOKEN, userLogged.token);
   }
 
   useEffect(() => {
@@ -54,6 +60,12 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     if (!user) {
       router.replace("/");
       return;
+    }
+
+    const sessionToken = window.sessionStorage.getItem(SESSION_TOKEN);
+
+    if (sessionToken) {
+      setToken(sessionToken);
     }
 
     setIsLogged(true);

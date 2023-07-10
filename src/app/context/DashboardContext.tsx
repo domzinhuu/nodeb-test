@@ -51,7 +51,7 @@ export interface ConsolidateData {
 export function DashboardContextProvider({
   children,
 }: DashboardContextProviderProps) {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({} as any);
   const [isLoading, setIsLoading] = useState(false);
   const [consolidate, setConsolidate] = useState<ConsolidateData[]>([]);
   const [chartConsolidate, setChartConsolidate] = useState<ConsolidateData[]>(
@@ -72,7 +72,7 @@ export function DashboardContextProvider({
     const consolidateData = buildResponseData(response);
     setData(response);
     setConsolidate(consolidateData);
-    setChartConsolidate(consolidateData)
+    setChartConsolidate(consolidateData);
     setIsLoading(false);
   }
 
