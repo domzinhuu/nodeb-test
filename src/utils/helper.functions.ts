@@ -8,9 +8,9 @@ const formatter = new Intl.NumberFormat("pt-BR", {
 });
 
 function mapAcquirerToNameAndValue(acquirers: any[]) {
-  console.log(acquirers);
   return acquirers.map((el: any) => ({
     document: el.document,
+    name: el.name,
     valorTotal: el.valorTotal,
   }));
 }
@@ -40,11 +40,14 @@ export const consolidateDataReduceToAcquirersArray = (
 
 export const getAllAcquirerNameFromConsolidateData = (
   consolidate: ConsolidateData[]
-): Array<string> => {
+): Array<any> => {
   const acquirers = consolidateDataReduceToAcquirersArray(consolidate);
-  const grouped = groupBy(acquirers, "name");
+  const grouped: any = groupBy(acquirers, "document");
 
-  return Object.keys(grouped);
+  return Object.keys(grouped).map((key) => ({
+    document: key,
+    name: grouped[key][0].name,
+  }));
 };
 
 export const consolidateDataReduceToBrandsArray = (
