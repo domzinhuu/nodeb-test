@@ -37,7 +37,7 @@ function TopCard({
                     </React.Fragment>
                   }
                 >
-                  <Info size={24} className="text-purple-700 cursor-pointer" />
+                  <Info size={24} className="text-primary-500 cursor-pointer" />
                 </NodebTooltip>
               </div>
             ) : (
@@ -49,8 +49,8 @@ function TopCard({
             <strong>{lastPayment ? formatDate(lastPayment) : ""}</strong>
           </span>
         </div>
-        <span className="bg-green-200 w-20 flex justify-center items-center p-2 rounded-lg">
-          <span className="text-green-700 text-lg">
+        <span className="bg-secondary-200 w-20 flex justify-center items-center p-2 rounded-lg">
+          <span className="text-secondary-700 text-lg">
             <BiTrendingUp size={28} />
           </span>
         </span>
@@ -71,8 +71,8 @@ function TopCard({
           </div>
         )}
 
-        <span className="bg-green-200 w-20 flex justify-center items-center p-2 rounded-lg">
-          <span className="text-green-700 text-lg">
+        <span className="bg-secondary-200 w-20 flex justify-center items-center p-2 rounded-lg">
+          <span className="text-secondary-700 text-lg">
             <BiCalendarExclamation size={28} />
           </span>
         </span>

@@ -1,4 +1,5 @@
 import { DashboardContext } from "@/app/context/DashboardContext";
+import { formatToCnpj } from "@/utils/helper.functions";
 import {
   Box,
   Chip,
@@ -107,9 +108,9 @@ export function FilterChartDialog({
                   </Box>
                 )}
               >
-                {acquirersName.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
+                {acquirersName.map((acq: any) => (
+                  <MenuItem key={acq.document} value={acq.document}>
+                    {formatToCnpj(acq.document)}-{acq.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -145,7 +146,7 @@ export function FilterChartDialog({
 
           <div className="flex justify-end py-2">
             <button
-              className="flex items-center gap-2 bg-purple-700 text-white rounded-lg p-2"
+              className="flex items-center gap-2 bg-primary-500 text-white rounded-lg p-2"
               type="submit"
             >
               {isLoading && (

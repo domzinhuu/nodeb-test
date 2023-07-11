@@ -8,9 +8,9 @@ const formatter = new Intl.NumberFormat("pt-BR", {
 });
 
 function mapAcquirerToNameAndValue(acquirers: any[]) {
-  console.log(acquirers);
   return acquirers.map((el: any) => ({
     document: el.document,
+    name: el.name,
     valorTotal: el.valorTotal,
   }));
 }
@@ -40,11 +40,14 @@ export const consolidateDataReduceToAcquirersArray = (
 
 export const getAllAcquirerNameFromConsolidateData = (
   consolidate: ConsolidateData[]
-): Array<string> => {
+): Array<any> => {
   const acquirers = consolidateDataReduceToAcquirersArray(consolidate);
-  const grouped = groupBy(acquirers, "name");
+  const grouped: any = groupBy(acquirers, "document");
 
-  return Object.keys(grouped);
+  return Object.keys(grouped).map((key) => ({
+    document: key,
+    name: grouped[key][0].name,
+  }));
 };
 
 export const consolidateDataReduceToBrandsArray = (
@@ -143,16 +146,17 @@ export function buildResponseData(mockData: any) {
 
 export function getChartColors() {
   return [
-    { border: "rgb(81, 18, 133)", bgColor: "rgb(81, 18, 133, 0.8)" },
-    { border: "rgb(176, 14, 221)", bgColor: "rgb(176, 14, 221, 0.8)" },
-    { border: "rgb(220, 12, 209)", bgColor: "rgb(220, 12, 209, 0.8)" },
-    { border: "rgb(142, 2, 98)", bgColor: "rgb(142, 2, 98, 0.8)" },
-    { border: "rgb(96, 21, 226)", bgColor: "rgb(96, 21, 226, 0.8)" },
-    { border: "rgb(107, 33, 168)", bgColor: "rgb(107, 33, 168, 0.8)" },
-    { border: "rgb(153, 102, 255)", bgColor: "rgb(153, 102, 255, 0.8)" },
-    { border: "rgb(122, 82, 204)", bgColor: "rgb(122, 82, 204, 0.8)" },
-    { border: "rgb(92, 61, 153)", bgColor: "rgb(92, 61, 153, 0.8)" },
-    { border: "rgb(61, 41, 102)", bgColor: "rgb(61, 41, 102, 0.8)" },
-    { border: "rgb(31, 20, 51)", bgColor: "rgb(31, 20, 51, 0.8)" },
+    { border: "rgb(102, 57, 141)", bgColor: "rgb(102, 57, 141, 0.8)" },
+    { border: "rgb(133, 97, 164)", bgColor: "rgb(133, 97, 164, 0.8)" },
+    { border: "rgb(147, 214, 215)", bgColor: "rgb(147, 214, 215, 0.8)" },
+    { border: "rgb(45, 112, 113)", bgColor: "rgb(45, 112, 113, 0.8)" },
+    { border: "rgb(82, 46, 113)", bgColor: "rgb(82, 46, 113, 0.8)" },
+    { border: "rgb(163, 136, 187)", bgColor: "rgb(163, 136, 187, 0.8)" },
+    { border: "rgb(61, 34, 85)", bgColor: "rgb(61, 34, 85, 0.8)" },
+    { border: "rgb(75, 186, 188)", bgColor: "rgb(75, 186, 188, 0.8)" },
+    { border: "rgb(111, 200, 201)", bgColor: "rgb(111, 200, 201, 0.8)" },
+    { border: "rgb(60, 149, 150)", bgColor: "rgb(60, 149, 150, 0.8)" },
+    { border: "rgb(183, 227, 228)", bgColor: "rgb(183, 227, 228, 0.8)" },
+    { border: "rgb(30, 74, 75, 113)", bgColor: "rgb(30, 74, 75, 0.8)" },
   ];
 }

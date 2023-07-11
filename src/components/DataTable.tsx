@@ -111,7 +111,7 @@ export default function DataTable({
                 </React.Fragment>
               }
             >
-              <Info size={24} className="text-purple-700 cursor-pointer" />
+              <Info size={24} className="text-primary-500 cursor-pointer" />
             </NodebTooltip>
           </div>
 

@@ -150,7 +150,7 @@ export function FilterDialog({ onClose: onclose, isOpen }: FilterDialogProps) {
           )}
           <div className="flex justify-end pt-4">
             <button
-              className="flex items-center gap-2 bg-purple-700 text-white rounded-lg p-2"
+              className="flex items-center gap-2 bg-primary-500 text-white rounded-lg p-2"
               type="submit"
             >
               {isLoading && (

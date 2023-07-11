@@ -120,8 +120,8 @@ export function DashboardContextProvider({
             const filteredBrands = acq.bandeiras.filter((brand: any) =>
               filter.brands.includes(brand.name)
             );
-            const valorPagar = sumBy(filteredBrands, "valorPagar");
-            const valorReceber = sumBy(filteredBrands, "valorReceber");
+            const valorPagar = sumBy(filteredBrands, "blockedAmount");
+            const valorReceber = sumBy(filteredBrands, "freeAmount");
             return {
               bandeiras: filteredBrands,
               document: acq.document,
