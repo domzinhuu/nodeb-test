@@ -20,8 +20,8 @@ function SideBar({ children }: any) {
   };
 
   useEffect(() => {
-    const userAdmin = checkIfUserHasAdminRole(user.id);
-    setIsAdmin(userAdmin);
+    /* const userAdmin = checkIfUserHasAdminRole(user.id);
+    setIsAdmin(userAdmin); */
   }, [user]);
   return (
     <div className="flex lg:flex-row flex-col-reverse ">
@@ -37,13 +37,13 @@ function SideBar({ children }: any) {
         </div>
 
         <div className="flex flex-col items-center justify-between">
-          {isAdmin && (
+          {/* {isAdmin && (
             <Link href="/settings">
               <div className="bg-green-600 text-white p-3 rounded-lg inline-block">
                 <FiSettings size={20} />
               </div>
             </Link>
-          )}
+          )} */}
           <span className="my-4 border-b-[1px] border-gray-200 w-full p-2"></span>
           <div onClick={logout}>
             <div className="bg-gray-200 text-purple-800 p-3 rounded-lg inline-block cursor-pointer">
