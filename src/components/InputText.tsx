@@ -2,6 +2,7 @@
 
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { UseFormRegister } from "react-hook-form";
+import { isValid } from "zod";
 interface InputTextProps {
   id?: string;
   name: string;
@@ -19,13 +20,23 @@ interface InputTextProps {
 
 const InputText = (props: InputTextProps) => {
   const [hasFocus, setHasFocus] = useState(false);
+  const [hasValue, setHasValue] = useState(false);
+
+  function handleToggleFocus(focus: boolean, value: string) {
+    setHasFocus(focus);
+    if (value) {
+      setHasValue(true);
+    } else {
+      setHasValue(false);
+    }
+  }
   return (
     <div className={props.className}>
       <div className="text-left w-full h-[30px] bg-white relative">
         <label
           className={`transition-all duration-100  text-gray-400 text-lg absolute ${
-            (hasFocus || props.value) &&
-            "translate-y-[-25px] text-purple-800 text-sm"
+            (hasFocus || hasValue) &&
+            "translate-y-[-25px] text-primary-500 text-sm"
           }`}
         >
           {props.name}
@@ -35,9 +46,10 @@ const InputText = (props: InputTextProps) => {
           <input
             id={props.id}
             type={props.secure ? "password" : "text"}
+            required
             {...props.register(props.name)}
-            onBlur={() => setHasFocus(false)}
-            onFocus={(e) => setHasFocus(true)}
+            onBlur={(e) => handleToggleFocus(false, e.target.value)}
+            onFocus={(e) => handleToggleFocus(true, e.target.value)}
             className={`p-1 absolute w-full border-b border-b-gray-400 outline-none bg-transparent ${props.inputClass}`}
           />
         ) : (
@@ -45,6 +57,7 @@ const InputText = (props: InputTextProps) => {
             id={props.id}
             type={props.secure ? "password" : "text"}
             name={props.name}
+            required
             value={props.value}
             onChange={props.onChange}
             onFocus={(e) => setHasFocus(true)}

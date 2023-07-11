@@ -8,7 +8,7 @@ interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
 const Button = ({ children, isLoading = false, ...props }: ButtonProps) => (
   <button
     {...props}
-    className={`bg-purple-800 text-white mt-8 p-3 drop-shadow-lg shadow-black hover:bg-purple-700 transition-all duration-150 rounded-lg ${props.className}`}
+    className={`bg-primary-500 text-white mt-8 p-3 drop-shadow-lg shadow-black hover:bg-primary-700 transition-all duration-150 rounded-lg ${props.className}`}
   >
     <div className="flex gap-1 items-center justify-center">
       {isLoading && <AiOutlineLoading className="animate-spin text-xl" />}

@@ -1,16 +1,19 @@
 "use client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AuthContext } from "./context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useContext, useState } from "react";
+import { RxLockClosed, RxLockOpen1 } from "react-icons/rx";
+import Link from "next/link";
+import * as z from "zod";
+
 import Button from "@/components/Button";
 import InputText from "@/components/InputText";
 import { USER_SESSION } from "@/constants/variables";
 import { User } from "@/functions/auth.functions";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
-import { RxLockClosed, RxLockOpen1 } from "react-icons/rx";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AuthContext } from "./context/AuthContext";
+import logo from "../../public/logo.png";
+import Image from "next/image";
 
 const loginFormSchema = z.object({
   username: z.string().min(1),
@@ -41,9 +44,9 @@ export default function Login() {
   return (
     <main className="w-full h-screen grid place-content-center">
       <div className="w-[500px] bg-white drop-shadow-lg shadow-black rounded-lg p-16 text-center">
-        <h1 className="text-6xl pb-8 uppercase font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-green-400">
-          Nodeb
-        </h1>
+        <div className="pb-8 w-full flex justify-center">
+          <Image src={logo} className="w-[70%]" alt="Logo da Nodeb" />
+        </div>
         <p>Faça login para ter acesso a plataforma</p>
 
         <form
@@ -86,7 +89,7 @@ export default function Login() {
           >
             Conectar
           </Button>
-          <Link href={"/"} className="text-purple-800 mt-2">
+          <Link href={"/"} className="text-primary-500 mt-2">
             Esqueci minha senha
           </Link>
         </form>
