@@ -1,8 +1,8 @@
 "use client";
+import { useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { AuthContext } from "@/app/context/AuthContext";
-import { usePathname } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
 
 function Header() {
   const [userName, setUserName] = useState("");
@@ -16,17 +16,14 @@ function Header() {
   return (
     <div className="flex justify-between items-center px-4 pt-4">
       <div className="">
-        <h4 className="text-2xl  uppercase font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-green-400">
-          Nodeb
-        </h4>
-        <span className="text-xl capitalize text-gray-500">
+        <span className="text-3xl capitalize text-gray-500">
           {pathName.replace(/\W/g, "")}
         </span>
       </div>
 
       <div className="flex items-center gap-4 mr-4">
         <h6 className="lg:h-6 text-sm">
-          Bem vindo, <b className="text-purple-800">{userName || "..."}</b>
+          Bem vindo, <b className="text-primary-500">{userName || "..."}</b>
         </h6>
       </div>
     </div>

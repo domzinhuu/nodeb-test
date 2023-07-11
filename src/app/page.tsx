@@ -45,7 +45,7 @@ export default function Login() {
     <main className="w-full h-screen grid place-content-center">
       <div className="w-[500px] bg-white drop-shadow-lg shadow-black rounded-lg p-16 text-center">
         <div className="pb-8 w-full flex justify-center">
-          <Image src={logo} className="w-[70%]" alt="Logo da Nodeb" />
+          <Image src={logo} className="w-[60%]" alt="Logo da Nodeb" />
         </div>
         <p>Faça login para ter acesso a plataforma</p>
 
