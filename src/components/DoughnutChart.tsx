@@ -45,10 +45,7 @@ export function DoughnutChart({
           datalabels: {
             color: "#fff",
             formatter: (value, context) => {
-              const dataArray = context.dataset.data;
-              const dataTotal = sum(dataArray);
-
-              return formatToCurrency(dataTotal);
+              return formatToCurrency(value);
             },
           },
         },

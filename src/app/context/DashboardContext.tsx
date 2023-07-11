@@ -13,6 +13,9 @@ interface DashboardContextData {
   data: any;
   consolidateData: ConsolidateData[];
   chartConsolidate: ConsolidateData[];
+  nextPayment: any;
+  currentPayment: any;
+  scheduledValue: number;
   isLoading: boolean;
   acquirersName: Array<string>;
   brandsName: Array<string>;
@@ -53,6 +56,13 @@ export function DashboardContextProvider({
 }: DashboardContextProviderProps) {
   const [data, setData] = useState({} as any);
   const [isLoading, setIsLoading] = useState(false);
+  const [scheduledValue, setScheduledValue] = useState(0);
+  const [nextPayment, setNextPayment] = useState(
+    {} as { amount: number; date: string }
+  );
+  const [currentPayment, setCurrentPayment] = useState(
+    {} as { amount: number; date: string }
+  );
   const [consolidate, setConsolidate] = useState<ConsolidateData[]>([]);
   const [chartConsolidate, setChartConsolidate] = useState<ConsolidateData[]>(
     []
@@ -70,6 +80,13 @@ export function DashboardContextProvider({
     setIsLoading(true);
     const response = await DashboardService.fetchDashboardData(filter);
     const consolidateData = buildResponseData(response);
+
+    if (response?.atual || response?.proximo || response?.agendaFutura) {
+      setCurrentPayment(response.atual);
+      setNextPayment(response.proximo);
+      setScheduledValue(response.agendaFutura);
+    }
+
     setData(response);
     setConsolidate(consolidateData);
     setChartConsolidate(consolidateData);
@@ -144,6 +161,9 @@ export function DashboardContextProvider({
         chartConsolidate,
         acquirersName: allAcquirersName,
         brandsName: allBrandsName,
+        nextPayment,
+        currentPayment,
+        scheduledValue,
         isLoading,
         fetchDashboardData: getDashboardData,
         filterChartData,

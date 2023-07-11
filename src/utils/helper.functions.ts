@@ -22,6 +22,10 @@ export const consolidateDataReduceToAcquirersArray = (
     return [];
   }
 
+  if (consolidate.length === 1) {
+    return mapAcquirerToNameAndValue(consolidate[0].acquirers);
+  }
+
   return consolidate.reduce((acc: any, current: any) => {
     const acqData = mapAcquirerToNameAndValue(current.acquirers);
 
@@ -48,6 +52,23 @@ export const consolidateDataReduceToBrandsArray = (
 ) => {
   if (!consolidate || consolidate.length === 0) {
     return [];
+  }
+
+  if (consolidate.length === 1) {
+    const acquirers = consolidate[0].acquirers;
+
+    if (acquirers.length === 1) {
+      return acquirers[0].bandeiras;
+    }
+
+    let brandData = acquirers.reduce((accBrand: any, currentBrand: any) => {
+      let newData = accBrand.bandeiras ? accBrand.bandeiras : accBrand;
+
+      newData = [...newData, ...currentBrand.bandeiras];
+      return newData;
+    });
+
+    return brandData;
   }
 
   return consolidate.reduce((acc: any, current: any) => {
@@ -85,6 +106,13 @@ export const formatDate = (date: string): string => {
   return "";
 };
 
+export const formatToCnpj = (value: string = ""): string => {
+  return value.replace(
+    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+    "$1.$2.$3/$4-$5"
+  );
+};
+
 export const formatToCurrency = (value: number): string =>
   formatter.format(value);
 
@@ -102,6 +130,7 @@ export function buildResponseData(mockData: any) {
 
     return {
       document: org.document,
+      name: org.name,
       totalPayValue,
       totalReceiveValue,
       totalValue,
@@ -109,7 +138,7 @@ export function buildResponseData(mockData: any) {
     };
   });
 
-  return [consolidate[0], consolidate[0]];
+  return consolidate;
 }
 
 export function getChartColors() {

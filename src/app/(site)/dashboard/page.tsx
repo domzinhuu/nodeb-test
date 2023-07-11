@@ -12,6 +12,7 @@ import { values, groupBy, sumBy } from "lodash";
 import {
   consolidateDataReduceToAcquirersArray,
   consolidateDataReduceToBrandsArray,
+  formatToCnpj,
   getChartColors,
 } from "@/utils/helper.functions";
 import { FilterDialog } from "@/components/FilterDialog";
@@ -34,7 +35,7 @@ function getChartDataByAcquirer(consolidateData: ConsolidateData[] = []) {
 
   // monta o dataset para enviar ao chart setando cores dinamicamente
   let acqData = {
-    labels: sumAcqurierTotal.map((item) => item.document),
+    labels: sumAcqurierTotal.map((item) => formatToCnpj(item.document)),
     datasets: [
       {
         label: "# valor total",
@@ -66,7 +67,7 @@ function getChartDataByPaymentMethod(consolidateData: ConsolidateData[] = []) {
   let sumBrandTotal = groupByBrand.map((brand: any) => {
     return {
       name: brand[0].name,
-      value: sumBy(brand, "valorReceber") + sumBy(brand, "valorPagar"),
+      value: sumBy(brand, "freeAmount") + sumBy(brand, "blockedAmount"),
     };
   });
 
@@ -118,8 +119,14 @@ function getChartDataByValue(consolidateData: ConsolidateData[] = []) {
 }
 
 export default function Dashboard() {
-  const { consolidateData, data, chartConsolidate } =
-    useContext(DashboardContext);
+  const {
+    consolidateData,
+    data,
+    chartConsolidate,
+    currentPayment,
+    nextPayment,
+    scheduledValue,
+  } = useContext(DashboardContext);
   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
   const [filterChartDialogOpen, setFilterChartDialogOpen] = useState(false);
 
@@ -150,10 +157,10 @@ export default function Dashboard() {
     data && (
       <>
         <TopCard
-          futureSchedule={Number(data.agendaFutura)}
+          futureSchedule={Number(scheduledValue)}
           lastPayment={data.ultimoPagamento}
-          nextPayment={data.proximo}
-          current={data.atual}
+          nextPayment={nextPayment}
+          current={currentPayment}
         />
         <div className="grid p-4 md:grid-cols-3 grid-cols-1 gap-4 ">
           <DataTable

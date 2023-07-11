@@ -14,7 +14,11 @@ import {
 } from "@mui/material";
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import * as React from "react";
-import { formatDate, formatToCurrency } from "@/utils/helper.functions";
+import {
+  formatDate,
+  formatToCnpj,
+  formatToCurrency,
+} from "@/utils/helper.functions";
 import { DashboardContext } from "@/app/context/DashboardContext";
 import { Funnel, Info } from "phosphor-react";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
@@ -143,7 +147,7 @@ export default function DataTable({
             >
               <div className="flex xl:flex-row w-full justify-between flex-wrap flex-col py-4">
                 <Typography className="flex-shrink-0">
-                  {row.document} - Nome do comercio LTDA.
+                  {formatToCnpj(row.document)}
                 </Typography>
 
                 <div className="flex-1 flex lg:flex-row lg:pt-0 pt-4 flex-col lg:justify-start">
@@ -199,7 +203,7 @@ export default function DataTable({
                         <TableCell component="th" scope="row">
                           <Typography variant="body1">
                             {" "}
-                            {acquirer.document} - Nome Adquirente
+                            {acquirer.document} - {acquirer.name}
                           </Typography>
                         </TableCell>
                         <TableCell align="right">

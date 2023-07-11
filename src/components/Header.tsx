@@ -10,7 +10,7 @@ function Header() {
   const pathName = usePathname();
 
   useEffect(() => {
-    setUserName(user.fullName);
+    setUserName(user.reprName);
   }, [user]);
 
   return (
