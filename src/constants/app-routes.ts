@@ -2,15 +2,15 @@ export const APP_ROUTES = {
   private: {
     dashboard: {
       name: "/dashboard",
-      roles:["ALL"]
+      roles: ["ALL"],
     },
     settings: {
       name: "/settings",
-      roles:['ADMIN']
+      roles: ["ADMIN"],
     },
   },
   public: {
     login: "/",
+    createUser: "/createUser",
   },
 };
-

@@ -1,4 +1,0 @@
-{
-  "/api/user/:email": "/users?email=:email",
-  "/api/empresas": "/userdata"
-}

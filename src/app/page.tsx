@@ -14,6 +14,7 @@ import { USER_SESSION } from "@/constants/variables";
 import { User } from "@/functions/auth.functions";
 import logo from "../../public/logo.png";
 import Image from "next/image";
+import { Typography } from "@mui/material";
 
 const loginFormSchema = z.object({
   username: z.string().min(1),
@@ -92,6 +93,13 @@ export default function Login() {
           <Link href={"/"} className="text-primary-500 mt-2">
             Esqueci minha senha
           </Link>
+
+          <Typography variant="body2">
+            Não possui conta?{" "}
+            <Link href={"/createUser"} className="text-primary-500 mt-2">
+              cadastre-se aqui
+            </Link>
+          </Typography>
         </form>
       </div>
     </main>
