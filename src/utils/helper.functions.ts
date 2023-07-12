@@ -1,4 +1,5 @@
 import { ConsolidateData } from "@/app/context/DashboardContext";
+import { data } from "autoprefixer";
 import { groupBy, sumBy } from "lodash";
 
 const dateFormat = new Intl.DateTimeFormat("pt-BR", { timeZone: "GMT" });
@@ -101,7 +102,7 @@ export const getAllBrandNameFromConsolidateData = (
 };
 
 export const formatDate = (date: string): string => {
-  if (date) {
+  if (date && !Number.isNaN(new Date(date).getTime())) {
     const jsDate = new Date(date);
     return dateFormat.format(jsDate);
   }
