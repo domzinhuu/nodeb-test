@@ -127,7 +127,7 @@ export default function DataTable({
         </div>
       </div>
       <div className="w-full relative lg:h-[65vh] h-[50vh] m-auto border rounded-lg bg-white overflow-y-scroll mt-4">
-        {consolidateData?.map((row: any) => (
+        {consolidateData?.map((row: any, index: number) => (
           <Accordion
             className="hover:bg-slate-50"
             sx={{
@@ -147,23 +147,28 @@ export default function DataTable({
             >
               <div className="flex xl:flex-row w-full justify-between flex-wrap flex-col py-4">
                 <Typography className="flex-shrink-0">
-                  {formatToCnpj(row.document)}
+                  Loja {index + 1}
+                  <br />
+                  <span className="text-md text-slate-500">
+                    {formatToCnpj(row.document)}
+                  </span>
                 </Typography>
 
                 <div className="flex-1 flex lg:flex-row lg:pt-0 pt-4 flex-col lg:justify-start">
-                  <Typography className=" xl:w-[30%] xl:text-right">
-                    <span className="block">Total a pagar:</span>
-                    <b className="text-red-500">
-                      - {formatToCurrency(row.totalPayValue)}
-                    </b>
+                  <Typography className="xl:w-[30%] xl:text-right">
+                    <span className="block">Valor total:</span>
+                    <b>{formatToCurrency(row.totalValue)}</b>
                   </Typography>
                   <Typography className="xl:w-[30%] xl:text-right">
                     <span className="block">Total a receber:</span>
                     <b>{formatToCurrency(row.totalReceiveValue)}</b>
                   </Typography>
-                  <Typography className="xl:w-[30%] xl:text-right">
-                    <span className="block">Valor total:</span>
-                    <b>{formatToCurrency(row.totalValue)}</b>
+
+                  <Typography className=" xl:w-[30%] xl:text-right">
+                    <span className="block">Total a pagar:</span>
+                    <b className="text-red-500">
+                      - {formatToCurrency(row.totalPayValue)}
+                    </b>
                   </Typography>
                 </div>
               </div>
@@ -173,22 +178,22 @@ export default function DataTable({
                 <Table aria-label="a dense table">
                   <TableHead>
                     <TableRow>
-                      <TableCell className="font-bold">Adquirente</TableCell>
+                      <TableCell className="font-bold"><Typography variant="body2" fontWeight={"bold"}>Maquininha</Typography></TableCell>
                       <TableCell className="font-bold" align="right">
-                        <Typography variant="body1">
-                          Último Pagamento agendado
-                        </Typography>
+                        <Typography variant="body2" fontWeight={"bold"}>Valor total</Typography>
                       </TableCell>
                       <TableCell className="font-bold" align="right">
-                        <Typography variant="body1">
+                        <Typography variant="body2" fontWeight={"bold"}>Valor a receber</Typography>
+                      </TableCell>
+                      <TableCell className="font-bold" align="right">
+                        <Typography variant="body2" fontWeight={"bold"}>
                           Valor comprometido
                         </Typography>
                       </TableCell>
                       <TableCell className="font-bold" align="right">
-                        <Typography variant="body1">Valor a receber</Typography>
-                      </TableCell>
-                      <TableCell className="font-bold" align="right">
-                        <Typography variant="body1">Valor total</Typography>
+                        <Typography variant="body2" fontWeight={"bold"}>
+                          Último Pagamento agendado
+                        </Typography>
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -203,12 +208,17 @@ export default function DataTable({
                         <TableCell component="th" scope="row">
                           <Typography variant="body1">
                             {" "}
-                            {acquirer.document} - {acquirer.name}
+                            {acquirer.name}
                           </Typography>
                         </TableCell>
                         <TableCell align="right">
                           <Typography variant="body1">
-                            {formatDate(acquirer.ultimoPagamento)}
+                            {formatToCurrency(acquirer.valorTotal)}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Typography variant="body1">
+                            {formatToCurrency(acquirer.valorReceber)}
                           </Typography>
                         </TableCell>
                         <TableCell align="right">
@@ -218,12 +228,7 @@ export default function DataTable({
                         </TableCell>
                         <TableCell align="right">
                           <Typography variant="body1">
-                            {formatToCurrency(acquirer.valorReceber)}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Typography variant="body1">
-                            {formatToCurrency(acquirer.valorTotal)}
+                            {formatDate(acquirer.ultimoPagamento)}
                           </Typography>
                         </TableCell>
                       </TableRow>
