@@ -123,8 +123,8 @@ export const formatToCurrency = (value: number): string =>
 export function buildResponseData(mockData: any) {
   const consolidate = mockData.organizations.map((org: any) => {
     const acquirers = org.acquirers.map((acquirer: any) => {
-      acquirer.valorPagar = sumBy(acquirer.bandeiras, "freeAmount");
-      acquirer.valorReceber = sumBy(acquirer.bandeiras, "blockedAmount");
+      acquirer.valorPagar = sumBy(acquirer.bandeiras, "blockedAmount");
+      acquirer.valorReceber = sumBy(acquirer.bandeiras, "freeAmount");
       acquirer.valorTotal = acquirer.valorReceber + acquirer.valorPagar;
       return acquirer;
     });
