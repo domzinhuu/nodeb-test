@@ -1,57 +1,49 @@
 "use client";
+import * as z from "zod";
+import { useContext } from "react";
 import { Typography } from "@mui/material";
-import logo from "../../../public/logo.png";
 import Image from "next/image";
 import { Camera } from "phosphor-react";
+import { useForm } from "react-hook-form";
+
+import logo from "../../../public/logo.png";
+import CompanyDataForm from "@/components/CompanyDataForm";
+import {
+  CreateUserContext,
+  CreateUserContextProvider,
+} from "../context/CreateUserContext";
+
+const createUserSchema = z.object({
+  emailLogin: z.string(),
+  password: z.string(),
+  companyDocument: z.string(),
+  street: z.string(),
+  number: z.number(),
+  neighborhood: z.string(),
+  info: z.string(),
+  city: z.string(),
+  uf: z.string(),
+  companyPhone: z.string(),
+  repEmail: z.string(),
+  repName: z.string(),
+  repPhone: z.string(),
+  repDoc: z.string(),
+});
+
+type CreateUserForm = z.infer<typeof createUserSchema>;
 
 export default function CreateUserPage() {
+  const { register, handleSubmit } = useForm<CreateUserForm>();
+
   return (
-    <div className="h-[100vh] w-full flex justify-center items-center text-slate-700">
-      <div className="w-[980px] bg-white rounded-lg p-4 flex flex-col border border-secondary-100">
-        <div className="flex items-center gap-4">
+    <div className="w-full flex justify-center items-center text-slate-700 my-8">
+      <div className="w-[980px] bg-white rounded-lg px-4 py-8 flex flex-col border border-secondary-100">
+        <div className="flex items-center gap-4 py-4">
           <Image className="w-[86px]" src={logo} alt="logo da nodeb" />
           <Typography variant="h4">Formulário de cadastro</Typography>
         </div>
 
-        <p className="p-4 my-6 text-lg font-bold rounded-lg px-2 bg-primary-100 border-primary-200 border">
-          Dados da Empresa
-        </p>
-
-        <div>
-          <div className="flex gap-2 m-4 items-center">
-            <label className="w-[120px] uppercase" htmlFor="cnpj">
-              Cnpj
-            </label>
-            <input
-              className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[50%]"
-              type="text"
-              id="cnpj"
-              placeholder="00.000.000/000-1-00"
-            />
-          </div>
-          <div className="flex gap-2 m-4 items-center">
-            <label className="w-[120px] uppercase" htmlFor="address">
-              Endereço
-            </label>
-            <input
-              className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[50%]"
-              type="text"
-              id="address"
-              placeholder="logradouro, numero, complemento"
-            />
-          </div>
-          <div className="flex gap-2 m-4 items-center">
-            <label className="w-[120px] uppercase" htmlFor="phone">
-              Telefone
-            </label>
-            <input
-              className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[50%]"
-              type="text"
-              id="phone"
-              placeholder="(xx) 0000-0000"
-            />
-          </div>
-        </div>
+        <CompanyDataForm register={register}/>
 
         <p className="p-4 my-6 text-lg font-bold rounded-lg px-2 bg-primary-100 border-primary-200 border">
           Dados do representante
