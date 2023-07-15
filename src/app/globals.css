@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 .chart-slider {
   height: auto;
   text-align: center;

@@ -7,6 +7,7 @@ import PrivateRoute from "@/components/PrivateRoute";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { AuthContextProvider } from "./context/AuthContext";
+import { CreateUserContextProvider } from "./context/CreateUserContext";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const path = usePathname();
@@ -15,11 +16,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-gray-50">
-        <AuthContextProvider>
-          {isPublic && children}
+        <CreateUserContextProvider>
+          <AuthContextProvider>{isPublic && children}</AuthContextProvider>
+
           {!isPublic && <PrivateRoute>{children}</PrivateRoute>}
           <ToastContainer />
-        </AuthContextProvider>
+        </CreateUserContextProvider>
       </body>
     </html>
   );
