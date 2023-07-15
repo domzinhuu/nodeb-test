@@ -133,6 +133,7 @@ export default function CompanyDataForm({
             className=" outline-primary-500 p-4 rounded-lg bg-slate-50 border-slate-200 border w-full"
             type="text"
             id="info"
+            {...register("info")}
             placeholder="Bloco, apto, etc..."
           />
         </div>
@@ -162,6 +163,7 @@ export default function CompanyDataForm({
             id="revenue"
             className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-full"
             placeholder="Selecione"
+            {...register("revenue")}
           >
             <option value="1">R$ 0,01 a R$ 5.000,00</option>
             <option value="2">R$ 5.001,00 a R$ 20.000,00</option>

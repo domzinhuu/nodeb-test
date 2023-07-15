@@ -21,6 +21,7 @@ const createUserSchema = z.object({
   info: z.string(),
   city: z.string(),
   uf: z.string(),
+  revenue: z.string(),
   companyPhone: z.string(),
   repEmail: z.string(),
   repName: z.string(),
@@ -37,9 +38,16 @@ export default function CreateUserPage() {
   function handleNewEcAndAcquirer(ecDoc: string, acqDoc: string) {
     onAddNewEcAndAcquirer(ecDoc, acqDoc);
   }
+
+  function handleSave(data: CreateUserForm) {
+    console.log(data);
+  }
   return (
     <div className="w-full flex justify-center items-center text-slate-700 my-8">
-      <div className="w-[980px] bg-white rounded-lg px-4 py-8 flex flex-col border border-secondary-100">
+      <form
+        onSubmit={handleSubmit(handleSave)}
+        className="w-[980px] bg-white rounded-lg px-4 py-8 flex flex-col border border-secondary-100"
+      >
         <div className="flex items-center gap-4 py-4">
           <Image className="w-[86px]" src={logo} alt="logo da nodeb" />
           <Typography variant="h4">Formulário de cadastro</Typography>
@@ -64,6 +72,7 @@ export default function CreateUserPage() {
                 className="outline-primary-500 p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
                 type="email"
                 id="email"
+                {...register("repEmail")}
                 placeholder="seu@email.com.br"
               />
             </div>
@@ -75,6 +84,7 @@ export default function CreateUserPage() {
                 className="outline-primary-500 p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
                 type="text"
                 id="reprName"
+                {...register("repName")}
                 placeholder="seu nome"
               />
             </div>
@@ -132,6 +142,7 @@ export default function CreateUserPage() {
               className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
               type="email"
               id="email_login"
+              {...register("emailLogin")}
               placeholder="seu@email.com.br"
             />
           </div>
@@ -143,6 +154,7 @@ export default function CreateUserPage() {
               className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
               type="password"
               id="password"
+              {...register("password")}
               placeholder="sua senha"
             />
           </div>
@@ -152,9 +164,9 @@ export default function CreateUserPage() {
           type="submit"
           className="flex gap-2 items-center self-center mt-8 bg-primary-500 text-white py-2 px-8 rounded-lg border-primary-600 border"
         >
-         <FloppyDiskBack size={24}/> Enviar
+          <FloppyDiskBack size={24} /> Enviar
         </button>
-      </div>
+      </form>
     </div>
   );
 }
