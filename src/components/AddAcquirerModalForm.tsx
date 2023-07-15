@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { X } from "phosphor-react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -27,10 +26,12 @@ interface AddAcquirerModalFormProps {
   onAdd: (data: { ecDoc: string; acqDoc: string }) => void;
   onClose: () => void;
   isOpen: boolean;
+  addAcquirerForEc: string | undefined;
 }
 
 export function AddAcquirerModalForm({
   onAdd,
+  addAcquirerForEc,
   onClose,
   isOpen,
 }: AddAcquirerModalFormProps) {
@@ -40,16 +41,24 @@ export function AddAcquirerModalForm({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<AcquirerModalForm>({
     resolver: zodResolver(addAcquirerModalSchema),
   });
 
+  useEffect(() => {
+    reset({ ecDoc: addAcquirerForEc });
+  }, [addAcquirerForEc, reset, isOpen]);
+
   function handleAddAcquirer(data: AcquirerModalForm) {
     onAdd(data);
     onClose();
   }
-  console.log(errors);
+
+  function handleClose() {
+    onClose();
+  }
   return (
     <Dialog open={isOpen} fullWidth={fullWidth} maxWidth={maxWidth}>
       <DialogTitle className="p-4 m-0 mb-4 w-full font-bold bg-primary-100 border-primary-200 border">
@@ -63,6 +72,7 @@ export function AddAcquirerModalForm({
             </label>
             <input
               type=""
+              readOnly={addAcquirerForEc !== undefined}
               className={`ecDoc bg-slate-50 border  rounded-lg p-4 valid:border-secondary-500 ${
                 errors.acqDoc
                   ? "outline-red-400 border-red-400"
@@ -109,7 +119,8 @@ export function AddAcquirerModalForm({
 
           <div className="flex justify-end gap-4 pt-4">
             <button
-              onClick={onClose}
+              type="button"
+              onClick={handleClose}
               className="px-4 py-2 border rounded-lg border-slate-400 bg-slate-300"
             >
               Fechar
@@ -123,7 +134,6 @@ export function AddAcquirerModalForm({
           </div>
         </form>
       </DialogContent>
-      <DialogActions></DialogActions>
     </Dialog>
   );
 }

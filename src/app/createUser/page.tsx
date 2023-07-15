@@ -1,18 +1,20 @@
 "use client";
 import * as z from "zod";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Typography } from "@mui/material";
 import Image from "next/image";
-import { Camera } from "phosphor-react";
+import { Camera, FloppyDiskBack } from "phosphor-react";
 import { useForm } from "react-hook-form";
 
 import logo from "../../../public/logo.png";
 import CompanyDataForm from "@/components/CompanyDataForm";
+import { CreateUserContext } from "../context/CreateUserContext";
+import { maskToCellhone, maskToCpf } from "@/utils/helper.functions";
 
 const createUserSchema = z.object({
   emailLogin: z.string(),
   password: z.string(),
-  companyDocument: z.string(),
+  companyDocument: z.string().min(18).max(18),
   street: z.string(),
   number: z.number(),
   neighborhood: z.string(),
@@ -23,14 +25,18 @@ const createUserSchema = z.object({
   repEmail: z.string(),
   repName: z.string(),
   repPhone: z.string(),
-  repDoc: z.string(),
+  repDoc: z.string().min(14).max(14),
 });
 
 type CreateUserForm = z.infer<typeof createUserSchema>;
 
 export default function CreateUserPage() {
   const { register, handleSubmit } = useForm<CreateUserForm>();
+  const { onAddNewEcAndAcquirer, createUser } = useContext(CreateUserContext);
 
+  function handleNewEcAndAcquirer(ecDoc: string, acqDoc: string) {
+    onAddNewEcAndAcquirer(ecDoc, acqDoc);
+  }
   return (
     <div className="w-full flex justify-center items-center text-slate-700 my-8">
       <div className="w-[980px] bg-white rounded-lg px-4 py-8 flex flex-col border border-secondary-100">
@@ -39,7 +45,10 @@ export default function CreateUserPage() {
           <Typography variant="h4">Formulário de cadastro</Typography>
         </div>
 
-        <CompanyDataForm register={register} />
+        <CompanyDataForm
+          register={register}
+          onAddNewEcAndAcquirer={handleNewEcAndAcquirer}
+        />
 
         <p className="p-4 my-6 text-lg font-bold rounded-lg px-2 bg-primary-100 border-primary-200 border">
           Dados do representante
@@ -52,7 +61,7 @@ export default function CreateUserPage() {
                 E-mail
               </label>
               <input
-                className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
+                className="outline-primary-500 p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
                 type="email"
                 id="email"
                 placeholder="seu@email.com.br"
@@ -63,7 +72,7 @@ export default function CreateUserPage() {
                 Nome
               </label>
               <input
-                className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
+                className="outline-primary-500 p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
                 type="text"
                 id="reprName"
                 placeholder="seu nome"
@@ -74,9 +83,14 @@ export default function CreateUserPage() {
                 Telefone
               </label>
               <input
-                className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
+                className="outline-primary-500 p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
                 type="text"
                 id="address"
+                {...register("repPhone", {
+                  onChange: (e) => {
+                    e.target.value = maskToCellhone(e.target.value);
+                  },
+                })}
                 placeholder="(xx) 90000-0000"
               />
             </div>
@@ -85,9 +99,14 @@ export default function CreateUserPage() {
                 Documento
               </label>
               <input
-                className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
+                className="outline-primary-500 p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
                 type="text"
                 id="document"
+                {...register("repDoc", {
+                  onChange: (e) => {
+                    e.target.value = maskToCpf(e.target.value);
+                  },
+                })}
                 placeholder="000.000.000-00"
               />
             </div>
@@ -100,11 +119,40 @@ export default function CreateUserPage() {
           </div>
         </div>
 
+        <p className="p-4 my-6 text-lg font-bold rounded-lg px-2 bg-primary-100 border-primary-200 border">
+          Dados de acesso
+        </p>
+
+        <div className="flex gap-2">
+          <div className="flex gap-2 m-4 items-center flex-1">
+            <label className="w-[120px] uppercase" htmlFor="email_login">
+              E-mail
+            </label>
+            <input
+              className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
+              type="email"
+              id="email_login"
+              placeholder="seu@email.com.br"
+            />
+          </div>
+          <div className="flex gap-2 m-4 items-center flex-1">
+            <label className="w-[120px] uppercase" htmlFor="password">
+              Senha
+            </label>
+            <input
+              className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[100%]"
+              type="password"
+              id="password"
+              placeholder="sua senha"
+            />
+          </div>
+        </div>
+
         <button
           type="submit"
-          className="self-end bg-primary-500 text-white py-2 px-8 rounded-lg border-primary-800 border"
+          className="flex gap-2 items-center self-center mt-8 bg-primary-500 text-white py-2 px-8 rounded-lg border-primary-600 border"
         >
-          Enviar
+         <FloppyDiskBack size={24}/> Enviar
         </button>
       </div>
     </div>
