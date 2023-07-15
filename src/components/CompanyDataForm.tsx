@@ -1,6 +1,6 @@
 "use client";
 import { PlusCircle } from "phosphor-react";
-import { FieldValues, UseFormRegister } from "react-hook-form";
+import { UseFormRegister } from "react-hook-form";
 import { AddAcquirerModalForm } from "./AddAcquirerModalForm";
 import { useState } from "react";
 import { maskToCnpj } from "@/utils/helper.functions";
