@@ -1,12 +1,24 @@
 "use client";
 import { PlusCircle } from "phosphor-react";
 import { FieldValues, UseFormRegister } from "react-hook-form";
+import { AddAcquirerModalForm } from "./AddAcquirerModalForm";
+import { useState } from "react";
 
 interface CompanyDataFormProps {
   register: UseFormRegister<any>;
 }
 
 export default function CompanyDataForm({ register }: CompanyDataFormProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  function handleCloseModalForm() {
+    setIsOpen(false);
+  }
+
+  function handleAddAcquirer(data: any) {
+    console.log(data);
+  }
+
   return (
     <section className="">
       <p className="p-4 my-6 text-lg font-bold rounded-lg px-2 bg-primary-100 border-primary-200 border">
@@ -119,11 +131,20 @@ export default function CompanyDataForm({ register }: CompanyDataFormProps) {
         </p>
 
         <div className="flex justify-center">
-          <button className="flex gap-2 p-2 text-white rounded-lg bg-secondary-500 border border-secondary-700">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="flex gap-2 p-2 text-white rounded-lg bg-secondary-500 border border-secondary-700"
+          >
             <PlusCircle size={24} /> Nova Maquininha
           </button>
         </div>
       </div>
+
+      <AddAcquirerModalForm
+        onAdd={handleAddAcquirer}
+        isOpen={isOpen}
+        onClose={handleCloseModalForm}
+      />
     </section>
   );
 }

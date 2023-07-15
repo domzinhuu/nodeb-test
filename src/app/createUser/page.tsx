@@ -1,6 +1,6 @@
 "use client";
 import * as z from "zod";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Typography } from "@mui/material";
 import Image from "next/image";
 import { Camera } from "phosphor-react";
@@ -8,10 +8,6 @@ import { useForm } from "react-hook-form";
 
 import logo from "../../../public/logo.png";
 import CompanyDataForm from "@/components/CompanyDataForm";
-import {
-  CreateUserContext,
-  CreateUserContextProvider,
-} from "../context/CreateUserContext";
 
 const createUserSchema = z.object({
   emailLogin: z.string(),
@@ -43,7 +39,7 @@ export default function CreateUserPage() {
           <Typography variant="h4">Formulário de cadastro</Typography>
         </div>
 
-        <CompanyDataForm register={register}/>
+        <CompanyDataForm register={register} />
 
         <p className="p-4 my-6 text-lg font-bold rounded-lg px-2 bg-primary-100 border-primary-200 border">
           Dados do representante
