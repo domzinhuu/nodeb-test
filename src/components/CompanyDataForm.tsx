@@ -74,7 +74,7 @@ export default function CompanyDataForm({
 
       <div>
         <div className="flex gap-2 m-4 items-center">
-          <label className="w-[120px] uppercase" htmlFor="cnpj">
+          <label className="w-[150px] uppercase" htmlFor="cnpj">
             Cnpj
           </label>
           <input
@@ -90,7 +90,7 @@ export default function CompanyDataForm({
           />
         </div>
         <div className="flex gap-2 m-4 items-center">
-          <label className="w-[120px] uppercase" htmlFor="street">
+          <label className="w-[150px] uppercase" htmlFor="street">
             Endereço
           </label>
           <input
@@ -109,7 +109,7 @@ export default function CompanyDataForm({
           />
         </div>
         <div className="flex gap-2 m-4 items-center">
-          <label className="w-[120px] uppercase" htmlFor="neighborhood">
+          <label className="w-[150px] uppercase" htmlFor="neighborhood">
             Localidade
           </label>
           <input
@@ -135,7 +135,7 @@ export default function CompanyDataForm({
           />
         </div>
         <div className="flex gap-2 m-4 items-center">
-          <label className="w-[120px] uppercase" htmlFor="info">
+          <label className="w-[150px] uppercase" htmlFor="info">
             Referência
           </label>
           <input
@@ -147,7 +147,7 @@ export default function CompanyDataForm({
           />
         </div>
         <div className="flex gap-2 m-4 items-center">
-          <label className="w-[120px] uppercase" htmlFor="phone">
+          <label className="w-[150px] uppercase" htmlFor="phone">
             Telefone
           </label>
           <input
@@ -164,7 +164,7 @@ export default function CompanyDataForm({
         </div>
 
         <div className="flex gap-2 m-4 items-center">
-          <label className="w-[120px] uppercase" htmlFor="revenue">
+          <label className="w-[150px] uppercase" htmlFor="revenue">
             Faturamento
           </label>
 
@@ -210,24 +210,18 @@ export default function CompanyDataForm({
 
         {addedCombo && (
           <div className="flex flex-col">
-            <Accordion
-              expanded={false}
-              sx={{ backgroundColor: "rgb(224, 215, 232)" }}
-              className="w-full bg-primary-100 border border-primary-200"
-            >
-              <AccordionSummary>
-                <div className="flex w-full gap-4 justify-between items-center">
-                  <Typography variant="h6">Comércios adicionados</Typography>
+            <Accordion expanded={false} className="w-full m-0 p-0">
+              <div className="flex w-full gap-4 justify-between items-center bg-primary-100 border border-primary-200 p-4 rounded-b-none rounded-t-lg">
+                <Typography variant="h6">Comércios adicionados</Typography>
 
-                  <button
-                    type="button"
-                    onClick={() => setIsOpen(true)}
-                    className="flex items-center gap-2 text-primary-500 hover:text-white hover:bg-primary-500 p-2 rounded-lg transition-all duration-100"
-                  >
-                    <PlusCircle size={20} /> Comércio
-                  </button>
-                </div>
-              </AccordionSummary>
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(true)}
+                  className="flex items-center gap-2 text-primary-500 hover:text-white hover:bg-primary-500 p-2 rounded-lg transition-all duration-100"
+                >
+                  <PlusCircle size={20} /> Comércio
+                </button>
+              </div>
             </Accordion>
 
             {Object.keys(addedCombo).map((key) => (

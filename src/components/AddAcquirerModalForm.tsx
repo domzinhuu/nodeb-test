@@ -57,21 +57,26 @@ export function AddAcquirerModalForm({
     onClose();
   }
   return (
-    <Dialog open={isOpen} fullWidth={fullWidth} maxWidth={maxWidth}>
-      <DialogTitle className="p-4 m-0 mb-4 w-full font-bold bg-primary-100 border-primary-200 border">
+    <Dialog
+      open={isOpen}
+      fullWidth={fullWidth}
+      maxWidth={maxWidth}
+      PaperProps={{ sx: { borderRadius: "6px" } }}
+    >
+      <p className="py-6 px-4 w-full text-lg font-bold bg-primary-100 border-primary-200 border">
         {selectedEc ? "Adicione" : "Cadastre"} uma maquininha
-      </DialogTitle>
+      </p>
       <DialogContent>
-        <form id="addAcquierForm" noValidate>
+        <form className="py-4" id="addAcquierForm" noValidate>
           <div className="flex pb-4 gap-2 mb-4">
             <div className="flex-1">
-              <label className="pb-2" htmlFor="ecDoc">
+              <label htmlFor="ecDoc">
                 DOCUMENTO <small>(Doc. Empresa)</small>:{" "}
               </label>
               <input
                 type="text"
                 readOnly={selectedEc !== undefined}
-                className={`w-full bg-slate-50 border  rounded-lg p-4 valid:border-secondary-500 read-only:text-gray-500 read-only:bg-gray-200 ${
+                className={`w-full bg-slate-50 border mt-2 rounded-lg p-4 valid:border-secondary-500 read-only:text-gray-500 read-only:bg-gray-200 ${
                   errors.acqDoc
                     ? "outline-red-400 border-red-400"
                     : "border-slate-200 outline-primary-400 "
@@ -97,7 +102,7 @@ export function AddAcquirerModalForm({
               <input
                 type="text"
                 readOnly={selectedEc !== undefined}
-                className="bg-slate-50 border  rounded-lg p-4 w-full outline-primary-400 read-only:text-gray-500 read-only:bg-gray-200"
+                className="bg-slate-50 border mt-2 rounded-lg p-4 w-full outline-primary-400 read-only:text-gray-500 read-only:bg-gray-200"
                 id="ecName"
                 placeholder="Nome ou apelido"
                 {...register("ecName")}
@@ -109,12 +114,12 @@ export function AddAcquirerModalForm({
           </div>
           <div className="flex pb-4 gap-2 items-end">
             <div className="flex-1">
-              <label className="pb-2" htmlFor="adqDoc">
+              <label htmlFor="adqDoc">
                 MAQUININHA <small>(Doc. credenciadora)</small>:
               </label>
               <input
                 type="text"
-                className={`peer w-full bg-slate-50 border rounded-lg p-4 valid:border-secondary-500 ${
+                className={`peer w-full  mt-2 bg-slate-50 border rounded-lg p-4 valid:border-secondary-500 ${
                   errors.acqDoc
                     ? "outline-red-400 border-red-400"
                     : "border-slate-200 outline-primary-400 "
@@ -135,12 +140,12 @@ export function AddAcquirerModalForm({
             </div>
 
             <div className="flex-1">
-              <label className="pb-2" htmlFor="acqName">
+              <label htmlFor="acqName">
                 NOME <small>(Credenciadora)</small>:{" "}
               </label>
               <input
                 type="text"
-                className="bg-slate-50 border  rounded-lg p-4 w-full outline-primary-400"
+                className="bg-slate-50 border mt-2 rounded-lg p-4 w-full outline-primary-400"
                 id="acqName"
                 {...register("acqName")}
                 placeholder="Nome ou apelido"
