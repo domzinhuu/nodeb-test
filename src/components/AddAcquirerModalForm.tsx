@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogProps,
-  DialogTitle,
-} from "@mui/material";
+import { FormEvent, useEffect, useState } from "react";
+import { Dialog, DialogContent, DialogProps, DialogTitle } from "@mui/material";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { maskToCnpj } from "@/utils/helper.functions";
+import { maskDocument } from "@/utils/helper.functions";
+import { AddEcAndAcquirerForm } from "@/app/context/CreateUserContext";
 
 const addAcquirerModalSchema = z.object({
+  ecName: z.string(),
+  acqName: z.string(),
   ecDoc: z
     .string()
     .min(18, { message: "Número de documento inválido ou não preenchido." }),
@@ -23,15 +20,15 @@ const addAcquirerModalSchema = z.object({
 type AcquirerModalForm = z.infer<typeof addAcquirerModalSchema>;
 
 interface AddAcquirerModalFormProps {
-  onAdd: (data: { ecDoc: string; acqDoc: string }) => void;
+  onAdd: (data: AddEcAndAcquirerForm) => void;
   onClose: () => void;
   isOpen: boolean;
-  addAcquirerForEc: string | undefined;
+  selectedEc: { ecDoc: string; ecName: string } | undefined;
 }
 
 export function AddAcquirerModalForm({
   onAdd,
-  addAcquirerForEc,
+  selectedEc,
   onClose,
   isOpen,
 }: AddAcquirerModalFormProps) {
@@ -48,8 +45,8 @@ export function AddAcquirerModalForm({
   });
 
   useEffect(() => {
-    reset({ ecDoc: addAcquirerForEc });
-  }, [addAcquirerForEc, reset, isOpen]);
+    reset({ ecDoc: selectedEc?.ecDoc, ecName: selectedEc?.ecName });
+  }, [selectedEc, reset, isOpen]);
 
   function handleAddAcquirer(data: AcquirerModalForm) {
     onAdd(data);
@@ -62,59 +59,96 @@ export function AddAcquirerModalForm({
   return (
     <Dialog open={isOpen} fullWidth={fullWidth} maxWidth={maxWidth}>
       <DialogTitle className="p-4 m-0 mb-4 w-full font-bold bg-primary-100 border-primary-200 border">
-        Cadastre uma maquininha
+        {selectedEc ? "Adicione" : "Cadastre"} uma maquininha
       </DialogTitle>
       <DialogContent>
-        <form onSubmit={handleSubmit(handleAddAcquirer)} noValidate>
-          <div className="flex flex-col pb-4">
-            <label className="pb-2" htmlFor="ecDoc">
-              DOCUMENTO <small>(Documento da Empresa)</small>:{" "}
-            </label>
-            <input
-              type=""
-              readOnly={addAcquirerForEc !== undefined}
-              className={`ecDoc bg-slate-50 border  rounded-lg p-4 valid:border-secondary-500 ${
-                errors.acqDoc
-                  ? "outline-red-400 border-red-400"
-                  : "border-slate-200 outline-primary-400 "
-              } `}
-              id="ecDoc"
-              required
-              {...register("ecDoc", {
-                onChange: (e) => {
-                  e.target.value = maskToCnpj(e.target.value);
-                },
-              })}
-              placeholder="00.000.000/0001-00"
-            />
-            <span className="text-red-400 text-sm  pl-2 pt-2">
-              {errors.ecDoc?.message}
-            </span>
-          </div>
-          <div className="flex flex-col pb-4">
-            <label className="pb-2" htmlFor="adqDoc">
-              MAQUININHA <small>(Documento da credenciadora)</small>:
-            </label>
-            <input
-              type=""
-              className={`peer bg-slate-50 border rounded-lg p-4 valid:border-secondary-500 ${
-                errors.acqDoc
-                  ? "outline-red-400 border-red-400"
-                  : "border-slate-200 outline-primary-400 "
-              }`}
-              id="adqDoc"
-              required
-              {...register("acqDoc", {
-                onChange: (e) => {
-                  e.target.value = maskToCnpj(e.target.value);
-                },
-              })}
-              placeholder="00.000.000/0001-00"
-            />
+        <form id="addAcquierForm" noValidate>
+          <div className="flex pb-4 gap-2 mb-4">
+            <div className="flex-1">
+              <label className="pb-2" htmlFor="ecDoc">
+                DOCUMENTO <small>(Doc. Empresa)</small>:{" "}
+              </label>
+              <input
+                type="text"
+                readOnly={selectedEc !== undefined}
+                className={`w-full bg-slate-50 border  rounded-lg p-4 valid:border-secondary-500 read-only:text-gray-500 read-only:bg-gray-200 ${
+                  errors.acqDoc
+                    ? "outline-red-400 border-red-400"
+                    : "border-slate-200 outline-primary-400 "
+                } `}
+                id="ecDoc"
+                required
+                {...register("ecDoc", {
+                  onChange: (e) => {
+                    e.target.value = maskDocument(e.target.value);
+                  },
+                })}
+                placeholder="00.000.000/0001-00"
+              />
+              <span className="text-red-400 text-sm  pl-2 pt-2">
+                {errors.ecDoc?.message}
+              </span>
+            </div>
 
-            <span className="text-red-400 text-sm pl-4 pt-2">
-              {errors.acqDoc?.message}
-            </span>
+            <div className="flex-1">
+              <label className="pb-4" htmlFor="ecName">
+                NOME <small>(Comércio)</small>:{" "}
+              </label>
+              <input
+                type="text"
+                readOnly={selectedEc !== undefined}
+                className="bg-slate-50 border  rounded-lg p-4 w-full outline-primary-400 read-only:text-gray-500 read-only:bg-gray-200"
+                id="ecName"
+                placeholder="Nome ou apelido"
+                {...register("ecName")}
+              />
+              <span className="text-red-400 text-sm  pl-2 pt-2">
+                {errors.ecDoc?.message}
+              </span>
+            </div>
+          </div>
+          <div className="flex pb-4 gap-2 items-end">
+            <div className="flex-1">
+              <label className="pb-2" htmlFor="adqDoc">
+                MAQUININHA <small>(Doc. credenciadora)</small>:
+              </label>
+              <input
+                type="text"
+                className={`peer w-full bg-slate-50 border rounded-lg p-4 valid:border-secondary-500 ${
+                  errors.acqDoc
+                    ? "outline-red-400 border-red-400"
+                    : "border-slate-200 outline-primary-400 "
+                }`}
+                id="adqDoc"
+                required
+                {...register("acqDoc", {
+                  onChange: (e) => {
+                    e.target.value = maskDocument(e.target.value);
+                  },
+                })}
+                placeholder="00.000.000/0001-00"
+              />
+
+              <span className="text-red-400 text-sm pl-4 pt-2">
+                {errors.acqDoc?.message}
+              </span>
+            </div>
+
+            <div className="flex-1">
+              <label className="pb-2" htmlFor="acqName">
+                NOME <small>(Credenciadora)</small>:{" "}
+              </label>
+              <input
+                type="text"
+                className="bg-slate-50 border  rounded-lg p-4 w-full outline-primary-400"
+                id="acqName"
+                {...register("acqName")}
+                placeholder="Nome ou apelido"
+              />
+              <span className="text-red-400 text-sm  pl-2 pt-2">
+                {errors.ecDoc?.message}
+              </span>
+            </div>
           </div>
 
           <div className="flex justify-end gap-4 pt-4">
@@ -126,7 +160,9 @@ export function AddAcquirerModalForm({
               Fechar
             </button>
             <button
-              type="submit"
+              form="addAcquierForm"
+              type="button"
+              onClick={handleSubmit(handleAddAcquirer)}
               className="px-4 py-2 border rounded-lg border-primary-600 bg-primary-500 text-white"
             >
               Gravar

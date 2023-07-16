@@ -12,7 +12,7 @@ import { values, groupBy, sumBy } from "lodash";
 import {
   consolidateDataReduceToAcquirersArray,
   consolidateDataReduceToBrandsArray,
-  formatToCnpj,
+  formatToDocument,
   getChartColors,
 } from "@/utils/helper.functions";
 import { FilterDialog } from "@/components/FilterDialog";
@@ -35,7 +35,7 @@ function getChartDataByAcquirer(consolidateData: ConsolidateData[] = []) {
 
   // monta o dataset para enviar ao chart setando cores dinamicamente
   let acqData = {
-    labels: sumAcqurierTotal.map((item) => formatToCnpj(item.document)),
+    labels: sumAcqurierTotal.map((item) => formatToDocument(item.document)),
     datasets: [
       {
         label: "# valor total",

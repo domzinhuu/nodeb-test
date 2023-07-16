@@ -1,5 +1,7 @@
 import { uniq } from "lodash";
 import { ReactNode, createContext, useState } from "react";
+import { CreateUserForm } from "../createUser/page";
+import { api } from "@/lib/axios";
 
 interface LoginData {
   email_login: string;
@@ -31,12 +33,19 @@ interface CreateUserData {
   ec: EcData;
 }
 
+export interface AddEcAndAcquirerForm {
+  ecName: string;
+  acqName: string;
+  ecDoc: string;
+  acqDoc: string;
+}
+
 interface CreateUserContextProps {
   createUser: CreateUserData;
-  onChangeUserInfo: (email?: string, password?: string) => void;
-  onAddNewEcAndAcquirer: (ecDoc: string, acqDoc: string) => void;
+  onSave: (data: CreateUserForm) => void;
+  onAddNewEcAndAcquirer: (formData: AddEcAndAcquirerForm) => void;
   onRemoveEc: (ecDoc: string) => void;
-  onRemoveAcquirerFromEc: (ecDoc: string, acqDoc: string) => void;
+  onRemoveAcquirerFromEc: (formData: AddEcAndAcquirerForm) => void;
 }
 
 export const CreateUserContext = createContext({} as CreateUserContextProps);
@@ -51,17 +60,16 @@ export function CreateUserContextProvider({
     ec: { combo: { added: undefined } },
   } as CreateUserData);
 
-  function handleLoginDataChange(email: string = "", password: string = "") {
-    let user: LoginData = { email_login: email, password };
-    setCreateUser((prev) => {
-      return {
-        ...prev,
-        user,
-      };
-    });
+  async function handleSave(data: CreateUserForm) {
+    const userEntity = buildUser(data);
+    userEntity.ec.combo = createUser.ec.combo;
+
+    console.log(userEntity);
+
+    await api.post("/register", { ...userEntity });
   }
 
-  function handleAddEcAndAcquirer(ecDoc: string, acqDoc: string) {
+  function handleAddEcAndAcquirer(formData: AddEcAndAcquirerForm) {
     setCreateUser((prev) => {
       let newValue = { ...prev };
       let combo: ComboAcquirer = { ...newValue.ec.combo };
@@ -70,13 +78,20 @@ export function CreateUserContextProvider({
         combo.added = {};
       }
 
-      if (Object.keys(combo.added).includes(ecDoc)) {
-        //TODO: posso retornar um erro aqui ou adicionar +1 adquirente
-        const addedAcquirers: string[] = combo.added[ecDoc];
-        addedAcquirers.push(acqDoc);
-        combo.added[ecDoc] = uniq(addedAcquirers);
+      const valuesWithouFormats = {
+        ...formData,
+        ecDoc: formData.ecDoc.replace(/\D/g, ""),
+        acqDoc: formData.acqDoc.replace(/\D/g, ""),
+      };
+
+      if (Object.keys(combo.added).includes(valuesWithouFormats.ecDoc)) {
+        const addedAcquirers: any[] =
+          combo.added[valuesWithouFormats.ecDoc.replace(/\D/g, "")];
+
+        addedAcquirers.push(valuesWithouFormats);
+        combo.added[formData.ecDoc] = uniq(addedAcquirers);
       } else {
-        combo.added[ecDoc] = [acqDoc];
+        combo.added[valuesWithouFormats.ecDoc] = [valuesWithouFormats];
         newValue.ec.combo = combo;
       }
 
@@ -89,20 +104,29 @@ export function CreateUserContextProvider({
       const newValue = { ...prev };
       const combo = { ...newValue.ec.combo };
 
-      delete combo.added[ecDoc];
+      delete combo.added[ecDoc.replace(/\D/g, "")];
 
       newValue.ec.combo = combo;
       return newValue;
     });
   }
 
-  function handleRemoveAcquirerFromEc(ecDoc: string, acqDoc: string) {
+  function handleRemoveAcquirerFromEc(formData: AddEcAndAcquirerForm) {
+    const valuesWithouFormats = {
+      ...formData,
+      ecDoc: formData.ecDoc.replace(/\D/g, ""),
+      acqDoc: formData.acqDoc.replace(/\D/g, ""),
+    };
+
     setCreateUser((prev) => {
       const newValue = { ...prev };
       const combo = { ...newValue.ec.combo };
 
-      combo.added[ecDoc] = combo.added[ecDoc].filter(
-        (acq: string) => acq !== acqDoc
+      combo.added[valuesWithouFormats.ecDoc] = combo.added[
+        valuesWithouFormats.ecDoc
+      ].filter(
+        (data: AddEcAndAcquirerForm) =>
+          data.acqDoc !== valuesWithouFormats.acqDoc
       );
 
       newValue.ec.combo = combo;
@@ -114,7 +138,7 @@ export function CreateUserContextProvider({
     <CreateUserContext.Provider
       value={{
         createUser,
-        onChangeUserInfo: handleLoginDataChange,
+        onSave: handleSave,
         onAddNewEcAndAcquirer: handleAddEcAndAcquirer,
         onRemoveEc: handleRemoveEc,
         onRemoveAcquirerFromEc: handleRemoveAcquirerFromEc,
@@ -124,3 +148,27 @@ export function CreateUserContextProvider({
     </CreateUserContext.Provider>
   );
 }
+
+const buildUser = (data: CreateUserForm): CreateUserData => {
+  const createUser: CreateUserData = {
+    user: {
+      email_login: data.emailLogin,
+      password: data.password,
+    },
+    ec: {
+      address: `${data.street} ${data.number}, ${data.info} ${data.neighborhood}/${data.city} - ${data.uf}`,
+      phone: data.companyPhone.replace(/\D/g, ""),
+      doc: data.companyDocument.replace(/\D/g, ""),
+      revenue: data.revenue,
+      representative: {
+        doc: data.repDoc.replace(/\D/g, ""),
+        email: data.repEmail,
+        name: data.repName,
+        phone: data.repPhone.replace(/\D/g, ""),
+      },
+      combo: {},
+    },
+  };
+
+  return createUser;
+};

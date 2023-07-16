@@ -3,7 +3,10 @@ import { PlusCircle, Trash } from "phosphor-react";
 import { UseFormRegister } from "react-hook-form";
 import { AddAcquirerModalForm } from "./AddAcquirerModalForm";
 import { useContext, useState } from "react";
-import { CreateUserContext } from "@/app/context/CreateUserContext";
+import {
+  AddEcAndAcquirerForm,
+  CreateUserContext,
+} from "@/app/context/CreateUserContext";
 import {
   Accordion,
   AccordionDetails,
@@ -17,11 +20,11 @@ import {
   Typography,
 } from "@mui/material";
 import { BiChevronDown } from "react-icons/bi";
-import { maskToCnpj, maskToPhone } from "@/utils/helper.functions";
+import { formatToDocument, maskDocument, maskToPhone } from "@/utils/helper.functions";
 
 interface CompanyDataFormProps {
   register: UseFormRegister<any>;
-  onAddNewEcAndAcquirer: (ecDoc: string, acqDoc: string) => void;
+  onAddNewEcAndAcquirer: (data: AddEcAndAcquirerForm) => void;
 }
 
 export default function CompanyDataForm({
@@ -29,22 +32,24 @@ export default function CompanyDataForm({
   onAddNewEcAndAcquirer,
 }: CompanyDataFormProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [ecToAdd, setEcToAdd] = useState<string | undefined>(undefined);
+  const [selectedEc, setSelectedEc] = useState<
+    { ecDoc: string; ecName: string } | undefined
+  >(undefined);
   const { createUser, onRemoveAcquirerFromEc, onRemoveEc } =
     useContext(CreateUserContext);
 
   function handleCloseModalForm() {
-    setEcToAdd(undefined);
+    setSelectedEc(undefined);
     setIsOpen(false);
   }
 
-  function handleAddEc(data: any) {
-    onAddNewEcAndAcquirer(data.ecDoc, data.acqDoc);
-    setEcToAdd(undefined);
+  function handleAddEc(data: AddEcAndAcquirerForm) {
+    onAddNewEcAndAcquirer(data);
+    setSelectedEc(undefined);
   }
 
-  function handleAddOnlyAcquirer(ecDoc: string) {
-    setEcToAdd(ecDoc);
+  function handleAddOnlyAcquirer(data: { ecDoc: string; ecName: string }) {
+    setSelectedEc(data);
     setIsOpen(true);
   }
 
@@ -52,8 +57,8 @@ export default function CompanyDataForm({
     onRemoveEc(ec);
   }
 
-  function handleDeleteAcquirer(ec: string, acquirer: string) {
-    onRemoveAcquirerFromEc(ec, acquirer);
+  function handleDeleteAcquirer(data: AddEcAndAcquirerForm) {
+    onRemoveAcquirerFromEc(data);
   }
 
   const addedCombo = createUser.ec.combo.added;
@@ -74,20 +79,20 @@ export default function CompanyDataForm({
             id="cnpj"
             {...register("companyDocument", {
               onChange: (e) => {
-                e.target.value = maskToCnpj(e.target.value);
+                e.target.value = maskDocument(e.target.value);
               },
             })}
             placeholder="00.000.000/000-1-00"
           />
         </div>
         <div className="flex gap-2 m-4 items-center">
-          <label className="w-[120px] uppercase" htmlFor="address">
+          <label className="w-[120px] uppercase" htmlFor="street">
             Endereço
           </label>
           <input
             className="p-4 rounded-lg bg-slate-50 border-slate-200 border w-[88%] outline-primary-500"
             type="text"
-            id="address"
+            id="street"
             {...register("street")}
             placeholder="Logradouro"
           />
@@ -156,7 +161,7 @@ export default function CompanyDataForm({
 
         <div className="flex gap-2 m-4 items-center">
           <label className="w-[120px] uppercase" htmlFor="revenue">
-            Vol. Vendas
+            Faturamento
           </label>
 
           <select
@@ -165,11 +170,19 @@ export default function CompanyDataForm({
             placeholder="Selecione"
             {...register("revenue")}
           >
-            <option value="1">R$ 0,01 a R$ 5.000,00</option>
-            <option value="2">R$ 5.001,00 a R$ 20.000,00</option>
-            <option value="3">R$ 20.001,00 a R$ 100.000,00</option>
-            <option value="4">R$ 100.001,00 a R$ 1.000.000,00</option>
-            <option value="5">mais de R$ 1.000.000,00</option>
+            <option value="R$ 0,01 a R$ 5.000,00">R$ 0,01 a R$ 5.000,00</option>
+            <option value="R$ 5.001,00 a R$ 20.000,00">
+              R$ 5.001,00 a R$ 20.000,00
+            </option>
+            <option value="R$ 20.001,00 a R$ 100.000,00">
+              R$ 20.001,00 a R$ 100.000,00
+            </option>
+            <option value="R$ 100.001,00 a R$ 1.000.000,00">
+              R$ 100.001,00 a R$ 1.000.000,00
+            </option>
+            <option value="mais de R$ 1.000.000,00">
+              mais de R$ 1.000.000,00
+            </option>
           </select>
         </div>
       </div>
@@ -182,6 +195,7 @@ export default function CompanyDataForm({
         {!addedCombo && (
           <div className="flex justify-center">
             <button
+              type="button"
               onClick={() => setIsOpen(true)}
               className="flex gap-2 p-2 text-white rounded-lg bg-secondary-500 border border-secondary-700"
             >
@@ -201,6 +215,7 @@ export default function CompanyDataForm({
                   <Typography variant="h6">Comércios adicionados</Typography>
 
                   <button
+                    type="button"
                     onClick={() => setIsOpen(true)}
                     className="flex items-center gap-2 text-primary-500 hover:text-white hover:bg-primary-500 p-2 rounded-lg transition-all duration-100"
                   >
@@ -208,7 +223,6 @@ export default function CompanyDataForm({
                   </button>
                 </div>
               </AccordionSummary>
-              <AccordionDetails></AccordionDetails>
             </Accordion>
 
             {Object.keys(addedCombo).map((key) => (
@@ -217,13 +231,13 @@ export default function CompanyDataForm({
                   <div className="flex w-full gap-4 justify-between items-center">
                     <div>
                       <Typography variant="body1">
-                        Nome ou apelido do comércio
+                        {addedCombo[key][0].ecName}
                       </Typography>
                       <Typography
                         className="text-slate-600 font-bold"
                         variant="body1"
                       >
-                        {key}
+                        {formatToDocument(key)}
                       </Typography>
                     </div>
                   </div>
@@ -238,7 +252,13 @@ export default function CompanyDataForm({
                           </TableCell>
                           <TableCell className="flex justify-end">
                             <button
-                              onClick={() => handleAddOnlyAcquirer(key)}
+                              type="button"
+                              onClick={() =>
+                                handleAddOnlyAcquirer({
+                                  ecDoc: addedCombo[key][0].ecDoc,
+                                  ecName: addedCombo[key][0].ecName,
+                                })
+                              }
                               className="flex items-center gap-2 transition-all duration-100 text-secondary-500 hover:bg-secondary-500 hover:text-white p-2 rounded-md"
                             >
                               <PlusCircle size={24} />
@@ -248,20 +268,21 @@ export default function CompanyDataForm({
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {addedCombo[key].map((acquirer: string) => (
-                          <TableRow key={acquirer}>
-                            <TableCell>Nome ou apelido do adquirente</TableCell>
-                            <TableCell>{acquirer}</TableCell>
+                        {addedCombo[key].map((data: AddEcAndAcquirerForm) => (
+                          <TableRow key={data.acqDoc}>
+                            <TableCell>{data.acqName}</TableCell>
+                            <TableCell>{formatToDocument(data.acqDoc)}</TableCell>
                             <TableCell>
                               {addedCombo[key].length > 1 && (
-                                <button
-                                  onClick={() =>
-                                    handleDeleteAcquirer(key, acquirer)
-                                  }
-                                  className="bg-red-400 text-white border borderred-500 p-1 rounded-md"
-                                >
-                                  <Trash size={24} />
-                                </button>
+                                <div className="flex justify-end">
+                                  <button
+                                    title="Remover Maquininha"
+                                    onClick={() => handleDeleteAcquirer(data)}
+                                    className="bg-red-400 text-white border borderred-500 p-1 rounded-md"
+                                  >
+                                    <Trash size={24} />
+                                  </button>
+                                </div>
                               )}
                             </TableCell>
                           </TableRow>
@@ -279,7 +300,7 @@ export default function CompanyDataForm({
       <AddAcquirerModalForm
         onAdd={handleAddEc}
         isOpen={isOpen}
-        addAcquirerForEc={ecToAdd}
+        selectedEc={selectedEc}
         onClose={handleCloseModalForm}
       />
     </section>

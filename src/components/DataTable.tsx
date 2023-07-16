@@ -16,7 +16,7 @@ import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import * as React from "react";
 import {
   formatDate,
-  formatToCnpj,
+  formatToDocument,
   formatToCurrency,
 } from "@/utils/helper.functions";
 import { DashboardContext } from "@/app/context/DashboardContext";
@@ -150,7 +150,7 @@ export default function DataTable({
                   Loja {index + 1}
                   <br />
                   <span className="text-md text-slate-500">
-                    {formatToCnpj(row.document)}
+                    {formatToDocument(row.document)}
                   </span>
                 </Typography>
 

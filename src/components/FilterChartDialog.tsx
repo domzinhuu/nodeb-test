@@ -1,5 +1,5 @@
 import { DashboardContext } from "@/app/context/DashboardContext";
-import { formatToCnpj } from "@/utils/helper.functions";
+import { formatToDocument } from "@/utils/helper.functions";
 import {
   Box,
   Chip,
@@ -110,7 +110,7 @@ export function FilterChartDialog({
               >
                 {acquirersName.map((acq: any) => (
                   <MenuItem key={acq.document} value={acq.document}>
-                    {formatToCnpj(acq.document)}-{acq.name}
+                    {formatToDocument(acq.document)}-{acq.name}
                   </MenuItem>
                 ))}
               </Select>

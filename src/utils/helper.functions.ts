@@ -110,13 +110,6 @@ export const formatDate = (date: string): string => {
   return "";
 };
 
-export const formatToCnpj = (value: string = ""): string => {
-  return value.replace(
-    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-    "$1.$2.$3/$4-$5"
-  );
-};
-
 export const maskToCnpj = (value: string = ""): string => {
   return value
     .replace(/\D+/g, "")
@@ -136,6 +129,14 @@ export const maskToCpf = (value: string = ""): string => {
     .replace(/(-\d{2})\d+?$/, "$1");
 };
 
+export const maskDocument = (value: string = ""): string => {
+  if (value.replace(/\D/g, "").length <= 11) {
+    return maskToCpf(value);
+  }
+
+  return maskToCnpj(value);
+};
+
 export const maskToPhone = (value: string = ""): string => {
   return value
     .replace(/\D+/g, "")
@@ -150,6 +151,25 @@ export const maskToCellhone = (value: string = ""): string => {
     .replace(/(\d{2})(\d)/, "($1) $2")
     .replace(/(\d{5})(\d)/, "$1-$2")
     .replace(/(-\d{4})\d+?$/, "$1");
+};
+
+export const formatToDocument = (value: string = ""): string => {
+  if (value.replace(/\D/g, "").length <= 11) {
+    return formatToCpf(value);
+  }
+
+  return formatToCnpj(value)
+};
+
+export const formatToCnpj = (value: string = ""): string => {
+  return value.replace(
+    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+    "$1.$2.$3/$4-$5"
+  );
+};
+
+export const formatToCpf = (value: string = ""): string => {
+  return value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 };
 
 export const formatToCurrency = (value: number): string =>

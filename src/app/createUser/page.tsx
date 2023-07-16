@@ -29,18 +29,19 @@ const createUserSchema = z.object({
   repDoc: z.string().min(14).max(14),
 });
 
-type CreateUserForm = z.infer<typeof createUserSchema>;
+export type CreateUserForm = z.infer<typeof createUserSchema>;
 
 export default function CreateUserPage() {
   const { register, handleSubmit } = useForm<CreateUserForm>();
-  const { onAddNewEcAndAcquirer, createUser } = useContext(CreateUserContext);
+  const { onAddNewEcAndAcquirer, createUser, onSave } =
+    useContext(CreateUserContext);
 
-  function handleNewEcAndAcquirer(ecDoc: string, acqDoc: string) {
-    onAddNewEcAndAcquirer(ecDoc, acqDoc);
+  function handleNewEcAndAcquirer(formData: any) {
+    onAddNewEcAndAcquirer(formData);
   }
 
   function handleSave(data: CreateUserForm) {
-    console.log(data);
+    onSave(data);
   }
   return (
     <div className="w-full flex justify-center items-center text-slate-700 my-8">
