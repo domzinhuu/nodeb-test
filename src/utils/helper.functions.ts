@@ -1,7 +1,7 @@
 import { ConsolidateData } from "@/app/context/DashboardContext";
 import { data } from "autoprefixer";
 import { groupBy, sumBy } from "lodash";
-
+const regexCNPJ = /^\d{2}.\d{3}.\d{3}\/\d{4}-\d{2}$/;
 const dateFormat = new Intl.DateTimeFormat("pt-BR", { timeZone: "GMT" });
 const formatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -224,6 +224,52 @@ export const validateCpf = (v: string = "") => {
   );
 };
 
+export const validateCnpj = (value: string = "") => {
+  if (!value) return false;
+
+  // Aceita receber o valor como string, número ou array com todos os dígitos
+  const isString = typeof value === "string";
+  const validTypes =
+    isString || Number.isInteger(value) || Array.isArray(value);
+
+  // Elimina valor de tipo inválido
+  if (!validTypes) return false;
+
+  // Filtro inicial para entradas do tipo string
+  if (isString) {
+    // Teste Regex para veificar se é uma string apenas dígitos válida
+    const digitsOnly = /^\d{14}$/.test(value);
+    // Teste Regex para verificar se é uma string formatada válida
+    const validFormat = regexCNPJ.test(value);
+    // Verifica se o valor passou em ao menos 1 dos testes
+    const isValid = digitsOnly || validFormat;
+
+    // Se o formato não é válido, retorna inválido
+    if (!isValid) return false;
+  }
+
+  // Elimina tudo que não é dígito
+  const numbers = matchNumbers(value);
+
+  // Valida a quantidade de dígitos
+  if (numbers.length !== 14) return false;
+
+  // Elimina inválidos com todos os dígitos iguais
+  const items = [...new Set(numbers)];
+  if (items.length === 1) return false;
+
+  // Separa os 2 últimos dígitos verificadores
+  const digits = numbers.slice(12);
+
+  // Valida 1o. dígito verificador
+  const digit0 = validCalc(12, numbers);
+  if (digit0 !== digits[0]) return "O documento informado não é valido.";
+
+  // Valida 2o. dígito verificador
+  const digit1 = validCalc(13, numbers);
+  return digit1 === digits[1] ? true : "O documento informado não é valido.";
+};
+
 export function buildResponseData(mockData: any) {
   const consolidate = mockData.organizations.map((org: any) => {
     const acquirers = org.acquirers.map((acquirer: any) => {
@@ -264,4 +310,27 @@ export function getChartColors() {
     { border: "rgb(183, 227, 228)", bgColor: "rgb(183, 227, 228, 0.8)" },
     { border: "rgb(30, 74, 75, 113)", bgColor: "rgb(30, 74, 75, 0.8)" },
   ];
+}
+
+// Cálculo validador cnpj
+function validCalc(x: number, numbers: number[]) {
+  const slice = numbers.slice(0, x);
+  let factor = x - 7;
+  let sum = 0;
+
+  for (let i = x; i >= 1; i--) {
+    const n = slice[x - i];
+    sum += n * factor--;
+    if (factor < 2) factor = 9;
+  }
+
+  const result = 11 - (sum % 11);
+
+  return result > 9 ? 0 : result;
+}
+
+// Elimina tudo que não é dígito cnpj
+function matchNumbers(value: string | number | number[] = "") {
+  const match = value.toString().match(/\d/g);
+  return Array.isArray(match) ? match.map(Number) : [];
 }

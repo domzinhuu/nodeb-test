@@ -95,6 +95,7 @@ export default function CreateUserPage() {
         </div>
 
         <CompanyDataForm
+          errors={errors}
           register={register}
           onCompanyDataChange={handleCompanyDataChange}
           onAddNewEcAndAcquirer={handleNewEcAndAcquirer}
@@ -275,7 +276,7 @@ export default function CreateUserPage() {
                       src={docUrl}
                       width="100%"
                       height="600px"
-                      style={{ border: "none"}}
+                      style={{ border: "none" }}
                     ></iframe>
                   </div>
                 )}
