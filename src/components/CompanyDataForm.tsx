@@ -20,7 +20,11 @@ import {
   Typography,
 } from "@mui/material";
 import { BiChevronDown } from "react-icons/bi";
-import { formatToDocument, maskDocument, maskToPhone } from "@/utils/helper.functions";
+import {
+  formatToDocument,
+  maskDocument,
+  maskToPhone,
+} from "@/utils/helper.functions";
 
 interface CompanyDataFormProps {
   register: UseFormRegister<any>;
@@ -208,6 +212,7 @@ export default function CompanyDataForm({
           <div className="flex flex-col">
             <Accordion
               expanded={false}
+              sx={{ backgroundColor: "rgb(224, 215, 232)" }}
               className="w-full bg-primary-100 border border-primary-200"
             >
               <AccordionSummary>
@@ -271,7 +276,9 @@ export default function CompanyDataForm({
                         {addedCombo[key].map((data: AddEcAndAcquirerForm) => (
                           <TableRow key={data.acqDoc}>
                             <TableCell>{data.acqName}</TableCell>
-                            <TableCell>{formatToDocument(data.acqDoc)}</TableCell>
+                            <TableCell>
+                              {formatToDocument(data.acqDoc)}
+                            </TableCell>
                             <TableCell>
                               {addedCombo[key].length > 1 && (
                                 <div className="flex justify-end">
