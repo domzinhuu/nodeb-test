@@ -50,7 +50,7 @@ export default function CreateUserPage() {
     getValues,
     formState: { errors },
   } = useForm<CreateUserForm>();
-  const { onAddNewEcAndAcquirer, createUser, onSave } =
+  const { onAddNewEcAndAcquirer, docUrl, onSave, onUploadFile } =
     useContext(CreateUserContext);
 
   function handleNewEcAndAcquirer(formData: any) {
@@ -261,10 +261,28 @@ export default function CreateUserPage() {
                 <label className="uppercase" htmlFor="upload">
                   Doc com foto (ex: rg, cnh):{" "}
                 </label>
-
+                {docUrl && (
+                  <div className="w-full flex items-center justify-center">
+                    {/*  <Image
+                      src={docUrl}
+                      alt="documento adicionado"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="w-full h-auto"
+                    /> */}
+                    <iframe
+                      src={docUrl}
+                      width="100%"
+                      height="600px"
+                      style={{ border: "none"}}
+                    ></iframe>
+                  </div>
+                )}
                 <input
                   className="file:cursor-pointer file:bg-secondary-500 file:border-none file:py-2 file:px-4 file:rounded-lg file:text-white"
                   type="file"
+                  onChange={onUploadFile}
                   accept=".pdf,image/*"
                   multiple
                   id="upload"

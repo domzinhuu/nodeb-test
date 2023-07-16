@@ -2,6 +2,7 @@ import { uniq } from "lodash";
 import { ReactNode, createContext, useState } from "react";
 import { CreateUserForm } from "../createUser/page";
 import { api } from "@/lib/axios";
+import { toFormData } from "axios";
 
 interface LoginData {
   email_login: string;
@@ -42,7 +43,9 @@ export interface AddEcAndAcquirerForm {
 
 interface CreateUserContextProps {
   createUser: CreateUserData;
+  docUrl: string;
   onSave: (data: CreateUserForm) => void;
+  onUploadFile: (file: any) => void;
   onAddNewEcAndAcquirer: (formData: AddEcAndAcquirerForm) => void;
   onRemoveEc: (ecDoc: string) => void;
   onRemoveAcquirerFromEc: (formData: AddEcAndAcquirerForm) => void;
@@ -56,15 +59,28 @@ interface CreateUserContextProviderProps {
 export function CreateUserContextProvider({
   children,
 }: CreateUserContextProviderProps) {
+  const [docFiles, setDocFiles] = useState<any>(null);
+  const [imgUrl, setImgUrl] = useState<string>("");
   const [createUser, setCreateUser] = useState<CreateUserData>({
     ec: { combo: { added: undefined } },
   } as CreateUserData);
+
+  function handleUploadFile(event: any) {
+    if (event.target.files && event.target.files.length) {
+      const i = event.target.files[0];
+      setImgUrl(URL.createObjectURL(i));
+      setDocFiles(i);
+    }
+  }
 
   async function handleSave(data: CreateUserForm) {
     const userEntity = buildUser(data);
     userEntity.ec.combo = createUser.ec.combo;
 
-    console.log(userEntity);
+    await api.postForm("/upload", {
+      name: userEntity.user?.email_login,
+      documents: docFiles,
+    });
 
     await api.post("/register", { ...userEntity });
   }
@@ -138,7 +154,9 @@ export function CreateUserContextProvider({
     <CreateUserContext.Provider
       value={{
         createUser,
+        docUrl: imgUrl,
         onSave: handleSave,
+        onUploadFile: handleUploadFile,
         onAddNewEcAndAcquirer: handleAddEcAndAcquirer,
         onRemoveEc: handleRemoveEc,
         onRemoveAcquirerFromEc: handleRemoveAcquirerFromEc,
