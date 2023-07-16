@@ -33,7 +33,7 @@ export function AddAcquirerModalForm({
   isOpen,
 }: AddAcquirerModalFormProps) {
   const [fullWidth, setFullWidth] = useState(true);
-  const [maxWidth, setMaxWidth] = useState<DialogProps["maxWidth"]>("sm");
+  const [maxWidth, setMaxWidth] = useState<DialogProps["maxWidth"]>("md");
 
   const {
     register,
@@ -107,12 +107,10 @@ export function AddAcquirerModalForm({
                 placeholder="Nome ou apelido"
                 {...register("ecName")}
               />
-              <span className="text-red-400 text-sm  pl-2 pt-2">
-                {errors.ecDoc?.message}
-              </span>
             </div>
           </div>
-          <div className="flex pb-4 gap-2 items-end">
+
+          <div className="flex pb-4 gap-2 items-start">
             <div className="flex-1">
               <label htmlFor="adqDoc">
                 MAQUININHA <small>(Doc. credenciadora)</small>:
@@ -150,9 +148,6 @@ export function AddAcquirerModalForm({
                 {...register("acqName")}
                 placeholder="Nome ou apelido"
               />
-              <span className="text-red-400 text-sm  pl-2 pt-2">
-                {errors.ecDoc?.message}
-              </span>
             </div>
           </div>
 

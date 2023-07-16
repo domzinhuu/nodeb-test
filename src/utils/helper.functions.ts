@@ -155,25 +155,74 @@ export const maskToCellhone = (value: string = ""): string => {
 
 export const formatToDocument = (value: string = ""): string => {
   if (value.replace(/\D/g, "").length <= 11) {
-    return formatToCpf(value);
+    return maskToCpf(value);
   }
 
-  return formatToCnpj(value)
+  return maskToCnpj(value);
 };
 
-export const formatToCnpj = (value: string = ""): string => {
-  return value.replace(
-    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-    "$1.$2.$3/$4-$5"
+export const formatToPhone = (value: string = ""): string => {
+  value = value.replace(/\D/g, "");
+
+  if (value.length > 10) {
+    return maskToCellhone(value);
+  }
+
+  return maskToPhone(value);
+};
+
+export const formatToCurrency = (value: number): string => {
+  return formatter.format(value);
+};
+
+export const formatToCep = (value: string = ""): string => {
+  return value
+    .replace(/\D+/g, "")
+    .replace(/(\d{2})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1-$2")
+    .replace(/(-\d{3})\d+?$/, "$1");
+};
+
+export const matchEmailPattern = (v: string = "") => {
+  return (
+    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+    "Informe um email válido."
   );
 };
 
-export const formatToCpf = (value: string = ""): string => {
-  return value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+export const matchPhonePattern = (v: string = "") => {
+  return (
+    /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/.test(
+      v
+    ) || "Informe um telefone válido."
+  );
 };
 
-export const formatToCurrency = (value: number): string =>
-  formatter.format(value);
+export const validateCpf = (v: string = "") => {
+  if (typeof v !== "string") {
+    return false;
+  }
+
+  v = v.replace(/[^\d]+/g, "");
+
+  if (v.length !== 11 || !!v.match(/(\d)\1{10}/)) {
+    return false;
+  }
+
+  const values = v.split("").map((el) => +el);
+  const rest = (count: any) =>
+    ((values
+      .slice(0, count - 12)
+      .reduce((soma, el, index) => soma + el * (count - index), 0) *
+      10) %
+      11) %
+    10;
+
+  return (
+    (rest(10) === values[9] && rest(11) === values[10]) ||
+    "O documento informado não é válido"
+  );
+};
 
 export function buildResponseData(mockData: any) {
   const consolidate = mockData.organizations.map((org: any) => {
