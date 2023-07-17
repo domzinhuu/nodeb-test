@@ -1,9 +1,9 @@
-import { FormEvent, useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogProps, DialogTitle } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Dialog, DialogContent, DialogProps } from "@mui/material";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { maskDocument } from "@/utils/helper.functions";
+import { formatToDocument, maskDocument } from "@/utils/helper.functions";
 import { AddEcAndAcquirerForm } from "@/app/context/CreateUserContext";
 
 const addAcquirerModalSchema = z.object({
@@ -45,7 +45,11 @@ export function AddAcquirerModalForm({
   });
 
   useEffect(() => {
-    reset({ ecDoc: selectedEc?.ecDoc, ecName: selectedEc?.ecName });
+    const document = formatToDocument(selectedEc?.ecDoc);
+    reset({
+      ecDoc: document,
+      ecName: selectedEc?.ecName,
+    });
   }, [selectedEc, reset, isOpen]);
 
   function handleAddAcquirer(data: AcquirerModalForm) {

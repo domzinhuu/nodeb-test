@@ -108,7 +108,7 @@ export default function CompanyDataForm({
             </label>
             <input
               className={`${
-                errors.companyDocument
+                showDocumentInvalid
                   ? "outline-red-400 border-red-400"
                   : "outline-primary-500 border-slate-200 "
               } p-4 rounded-lg bg-slate-50  border w-[100%]`}
@@ -116,9 +116,9 @@ export default function CompanyDataForm({
               id="cnpj"
               {...register("companyDocument", {
                 required: { value: true, message: "Este campo é obrigatório" },
-                minLength:{value:18, message: "O número informado está incompleto"},
-                validate: {
-                  matchPattern: validateCnpj,
+                minLength: {
+                  value: 18,
+                  message: "O número informado está incompleto",
                 },
                 onChange: (e) => {
                   e.target.value = maskDocument(e.target.value);
@@ -130,10 +130,10 @@ export default function CompanyDataForm({
               placeholder="00.000.000/000-1-00"
             />
           </div>
-          {errors.companyDocument && (
+          {showDocumentInvalid && (
             <div className="flex justify-end pr-8">
               <span className="text-red-400">
-                {errors.companyDocument.message}
+                Este cnpj não é um número válido
               </span>
             </div>
           )}

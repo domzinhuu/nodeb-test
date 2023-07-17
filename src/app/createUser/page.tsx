@@ -3,7 +3,12 @@ import * as z from "zod";
 import { useContext, useState } from "react";
 import { Typography } from "@mui/material";
 import Image from "next/image";
-import { ArrowArcLeft, FloppyDiskBack, MagnifyingGlass } from "phosphor-react";
+import {
+  ArrowArcLeft,
+  FloppyDiskBack,
+  MagnifyingGlass,
+  Spinner,
+} from "phosphor-react";
 import { useForm } from "react-hook-form";
 
 import logo from "../../../public/logo.png";
@@ -43,6 +48,7 @@ export type CreateUserForm = z.infer<typeof createUserSchema>;
 
 export default function CreateUserPage() {
   const [showCompanyAdminData, setShowCompanyAdminData] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
@@ -57,17 +63,22 @@ export default function CreateUserPage() {
     onAddNewEcAndAcquirer(formData);
   }
 
-  console.log(errors);
-
-  function handleSave(data: CreateUserForm) {
-    onSave(data);
+  async function handleSave(data: CreateUserForm) {
+    setIsSubmitting(true);
+    try {
+      await onSave(data);
+    } catch (error) {
+      setIsSubmitting(false);
+      alert("Ocorreu algum erro (vou alterar isso para um toast futuramente)");
+    }
   }
 
   function handleCompanyDataChange(data: CompanyData | null) {
-    const d = getValues();
+    const oldValues = getValues();
 
     if (data) {
       reset({
+        ...oldValues,
         city: data.city,
         neighborhood: data.neighborhood,
         info: data.info,
@@ -78,8 +89,6 @@ export default function CreateUserPage() {
         uf: data.state,
       });
       setShowCompanyAdminData(true);
-    } else {
-      console.log("cnpj invalido");
     }
   }
   return (
@@ -127,7 +136,7 @@ export default function CreateUserPage() {
                           message: "Este campo é obrigatório",
                         },
                         validate: {
-                          mathPattern: matchEmailPattern,
+                          matchPattern: matchEmailPattern,
                         },
                       })}
                       placeholder="seu@email.com.br"
@@ -334,9 +343,15 @@ export default function CreateUserPage() {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="flex gap-2 items-center self-center mt-8 bg-primary-500 text-white py-2 px-8 rounded-lg border-primary-600 border"
               >
-                <FloppyDiskBack size={24} /> Enviar
+                {isSubmitting ? (
+                  <Spinner className="animate-spin duration-100" size={24} />
+                ) : (
+                  <FloppyDiskBack size={24} />
+                )}{" "}
+                Enviar
               </button>
             </div>
           </>

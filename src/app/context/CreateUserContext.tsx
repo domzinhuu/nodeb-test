@@ -44,7 +44,7 @@ export interface AddEcAndAcquirerForm {
 interface CreateUserContextProps {
   createUser: CreateUserData;
   docUrl: string;
-  onSave: (data: CreateUserForm) => void;
+  onSave: (data: CreateUserForm) => Promise<void>;
   onUploadFile: (file: any) => void;
   onAddNewEcAndAcquirer: (formData: AddEcAndAcquirerForm) => void;
   onRemoveEc: (ecDoc: string) => void;
@@ -73,16 +73,20 @@ export function CreateUserContextProvider({
     }
   }
 
-  async function handleSave(data: CreateUserForm) {
+  async function handleSave(data: CreateUserForm): Promise<void> {
     const userEntity = buildUser(data);
     userEntity.ec.combo = createUser.ec.combo;
 
-    await api.postForm("/upload", {
-      name: userEntity.user?.email_login,
-      documents: docFiles,
-    });
+    try {
+      await api.postForm("/upload", {
+        name: userEntity.user?.email_login,
+        documents: docFiles,
+      });
 
-    await api.post("/register", { ...userEntity });
+      await api.post("/register", { ...userEntity });
+    } catch (error) {
+      throw error;
+    }
   }
 
   function handleAddEcAndAcquirer(formData: AddEcAndAcquirerForm) {
