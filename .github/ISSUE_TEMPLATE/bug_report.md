@@ -10,7 +10,7 @@ assignees: ''
 **Descriçao do bug**
 Uma descrição clara do problema
 
-**To Reproduce (se tiver)**
+**Para reproduzir (se tiver)**
 Passos para reproduzir o problema:
 1. Go to '...'
 2. Click on '....'
@@ -24,5 +24,5 @@ Descreva aqui o comportamento desejado com esta correção
 Se tiver prints é muito bom 
 
 
-**Additional context**
+**Dados adicionais**
 Alguma outra informação sobre como resolver, ou sugestão de algo pode por aqui
