@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://api.nodeb.com.br:3050",
+  baseURL: "https://api.nodeb.com.br",
 });
 
 export const helperApi = axios.create({
